@@ -1,0 +1,19 @@
+{
+  "files": [{
+    "type": "VIDEO",
+    "sources": {
+      "h264": {
+        "source": "../videos/01-16s_h264.mov",
+        "size": 20651419
+      }
+    }
+  }, {
+    "type": "VIDEO",
+    "sources": {
+      "h264": {
+        "source": "../videos/02-18s_h264.mov",
+        "size": 6805965
+      }
+    }
+  }]
+}
