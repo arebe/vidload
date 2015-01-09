@@ -16,11 +16,16 @@ var myVidsOgg=[
    "videos/01-16s_h264.ogv", 
    "videos/02-18s_h264.ogv",	
 ]
+
+var vidElements = [];
+
+
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
 
-for (var i = 0; i < myVids.length; i++) {
+var preLoader = function(e){
+  for (var i = 0; i < myVids.length; i++) {
     if(Modernizr.video.h264){
     	console.log("video " +i+ " filename: " + (myVids[i]));
     	loadVid(myVids, "video/h264", i);
@@ -37,7 +42,11 @@ for (var i = 0; i < myVids.length; i++) {
     else{
     	console.log("no html5 video support :( consider upgrading to a modern browser");
     }
+  }
+  checkLoad();
 }
+
+preLoader();
 
 function loadVid(vidArray, vidType, i){
 	var elementID = "video"+i;
@@ -55,10 +64,33 @@ function loadVid(vidArray, vidType, i){
         console.log("Loading video "+i+" into element");
         video.src = vid;
         video.type=vidType;
+        vidElements.push(video);
     // not needed if autoplay is set for the video element
     // video.play()
    }
   }
   xhr.send();
+
+}
+
+var percentLoaded = 0;
+
+
+function checkLoad(){
+  setInterval(function(){
+    if(percentLoaded < 100){
+      var bitsLoaded=0;
+      var bitTotal=0;
+      for(var i =0; i < vidElements.length; i++){
+        vidElements[i].onprogress=function(){ bitsLoaded+=vidElements[i].buffered.end(0)};
+        bitTotal+=vidElements[i].duration;
+      }
+      percentLoaded=parseInt(((bitsLoaded/bitTotal)*100));
+      console.log("percentloaded: "+percentLoaded);
+    }
+    else{
+      clearInterval();
+    }
+  }, 200);
 }
 
