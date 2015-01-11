@@ -5,16 +5,25 @@ console.log("Downloading videos...hellip;Please wait...")
 var myVids=[
    "videos/01-16s_h264.mov", 
    "videos/02-18s_h264.mov",	
+   "videos/03-13s_h264.mov",
+   "videos/04-13s_h264.mov",
+   "videos/05-22s_h264.mov",
 ]
 
 var myVidsWebm=[
    "videos/01-16s_h264.webm", 
    "videos/02-18s_h264.webm",	
+   "videos/03-13s_h264.webm",
+   "videos/04-13s_h264.webm",
+   "videos/05-22s_h264.webm",
 ]
 
 var myVidsOgg=[
    "videos/01-16s_h264.ogv", 
    "videos/02-18s_h264.ogv",	
+   "videos/03-13s_h264.ogv",
+   "videos/04-13s_h264.ogv",
+   "videos/05-22s_h264.ogv",
 ]
 
 var vidElements = [];
@@ -23,8 +32,28 @@ var vidElements = [];
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
+var percentLoaded = 0;
 
-var preLoader = function(e){
+var checkLoad = 
+  setInterval(function(){
+    if(percentLoaded < 100){
+      var bitsLoaded=0;
+      var bitTotal=0;
+      for(var i =0; i < vidElements.length; i++){
+        bitsLoaded+=vidElements[i].buffered.end(0);
+        bitTotal+=vidElements[i].duration;
+        console.log("buffered: "+vidElements[1].buffered.end(0));
+      }
+      percentLoaded=parseInt(((bitsLoaded/bitTotal)*100)); 
+    }
+    else{
+      console.log("percentLoaded: "+percentLoaded);
+      clearTimeout(checkLoad);
+    }
+  }, 200);
+
+
+var preLoader = function(){
   for (var i = 0; i < myVids.length; i++) {
     if(Modernizr.video.h264){
     	console.log("video " +i+ " filename: " + (myVids[i]));
@@ -44,6 +73,7 @@ var preLoader = function(e){
     }
   }
   checkLoad();
+
 }
 
 preLoader();
@@ -73,24 +103,8 @@ function loadVid(vidArray, vidType, i){
 
 }
 
-var percentLoaded = 0;
 
 
-function checkLoad(){
-  setInterval(function(){
-    if(percentLoaded < 100){
-      var bitsLoaded=0;
-      var bitTotal=0;
-      for(var i =0; i < vidElements.length; i++){
-        vidElements[i].onprogress=function(){ bitsLoaded+=vidElements[i].buffered.end(0)};
-        bitTotal+=vidElements[i].duration;
-      }
-      percentLoaded=parseInt(((bitsLoaded/bitTotal)*100));
-      console.log("percentloaded: "+percentLoaded);
-    }
-    else{
-      clearInterval();
-    }
-  }, 200);
-}
+
+
 
