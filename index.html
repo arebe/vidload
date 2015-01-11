@@ -5,7 +5,8 @@
         <title>HTML5 Video Preloader Prototype</title>
 	<link rel="stylesheet" href="css/normalize.css" type="text/css">
 	<link rel="stylesheet" href="css/main.css" type="text/css">
-	<link rel="stylesheet" href="css/preloader.css" type="text/css">
+<!-- 	<link rel="stylesheet" href="css/preloader.css" type="text/css"> -->
+    <link rel="stylesheet" href="css/vidplayer.css" type="text/css">
 	<script src="js/modernizr.custom.03694.js"></script>
 	<script src="js/preloader.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -15,29 +16,37 @@
 
 <body>
     <header>
-          HTML5 VIDEO PRELOADER PROTOYPE FTVW!
+          HTML5 VIDEO PRELOADER PROTOYPE
     </header>
     <!--  -->
+    <div id="loading">
+        <div class="center">
+            <h2>Loading videos, please wait.</h2>
+        </div> <!-- end center -->
+    </div> <!-- end loading -->
 
     <div class="center">
-    	<div>
-    	<video id="video0" width="800" height="450" loop controls>
-	         Your browser does not support the video tag.
-    	</video>
-    	 <video id="video1" width="800" height="450" loop controls>
-    		Your browser does not support the video tag.
-    	</video>
-        <video id="video2" width="800" height="450" loop controls>
-            Your browser does not support the video tag.
-        </video>
-        <video id="video3" width="800" height="450" loop controls>
-            Your browser does not support the video tag.
-        </video>
-        <video id="video4" width="800" height="450" loop controls>
-            Your browser does not support the video tag.
-        </video>
-
-        </div>
+        <div id="video_player">
+        	<video id="video0" width="800" height="450">
+    	         Your browser does not support the video tag.
+        	</video>
+        	 <video id="video1" width="800" height="450">
+        		Your browser does not support the video tag.
+        	</video>
+            <video id="video2" width="800" height="450">
+                Your browser does not support the video tag.
+            </video>
+            <video id="video3" width="800" height="450">
+                Your browser does not support the video tag.
+            </video>
+            <video id="video4" width="800" height="450">
+                Your browser does not support the video tag.
+            </video>
+            <button type="button" class="btn_skip" id="btn_prev"> << </button>
+            <button type="button" class="btn_play" id="btn_play">PLAY</button>
+            <button type="button" class="btn_skip" id="btn_next"> >> </button>
+        </div> <!-- end center -->
+    </div><!-- end video_player -->
 
 
 

@@ -49,8 +49,73 @@ var checkLoad =
     else{
       console.log("percentLoaded: "+percentLoaded);
       clearTimeout(checkLoad);
+      document.getElementById("loading").style.display="none";
+      player();
     }
   }, 200);
+
+var player = 
+  function(){
+    var videoPlayer = document.getElementById("video_player");
+    var vindex = 0;
+    var theVideo = document.getElementById("video"+vindex);
+
+    videoPlayer.style.display="table";
+    theVideo.style.display="block";
+
+    var playBtn = document.getElementById("btn_play");
+    var prevBtn = document.getElementById("btn_prev");
+    var nextBtn = document.getElementById("btn_next");
+
+    // play and pause
+    playBtn.addEventListener("click", function(){
+      if (theVideo.paused){
+        theVideo.play();
+        playBtn.textContent="PAUSE";
+      }
+      else{
+        theVideo.pause();
+        playBtn.textContent="PLAY";
+      }
+    });
+
+    // iterate through video playlist backwards
+    prevBtn.addEventListener("click", function(){
+      if(vindex == 0){
+        // go to begining of first video and play
+        theVideo.currentTime=0;
+        theVideo.pause();
+        playBtn.textContent="PLAY";
+      }
+      else{
+        theVideo.style.display="none";
+        vindex--;
+        theVideo = document.getElementById("video"+vindex);
+        theVideo.style.display="block";
+        theVideo.pause();
+        playBtn.textContent="PLAY";
+
+      }
+    })
+    // iterate through video playlist forwards
+    nextBtn.addEventListener("click", function(){
+      if(vindex < (vidElements.length-1)){
+        theVideo.style.display="none";
+        vindex++;
+        theVideo = document.getElementById("video"+vindex);
+        theVideo.style.display="block";
+        theVideo.pause();
+        playBtn.textContent="PLAY";
+      }
+      else{
+        // go to begining of last video and play
+        theVideo.currentTime=0;
+        theVideo.pause();
+        playBtn.textContent="PLAY";
+
+      }
+    })
+  }
 
 
 var preLoader = function(){
@@ -73,7 +138,6 @@ var preLoader = function(){
     }
   }
   checkLoad();
-
 }
 
 preLoader();
@@ -91,18 +155,19 @@ function loadVid(vidArray, vidType, i){
     	var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
         // myBlob is now the blob that the object URL pointed to.
         var video = document.getElementById(elementID);
+        video.style.display="none";
         console.log("Loading video "+i+" into element");
         video.src = vid;
         video.type=vidType;
         vidElements.push(video);
-    // not needed if autoplay is set for the video element
-    // video.play()
    }
   }
   xhr.send();
 
 }
 
+
+ 
 
 
 
