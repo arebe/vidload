@@ -1,6 +1,6 @@
 // ajax from http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
 
-console.log("Downloading videos...hellip;Please wait...")
+console.log("Downloading videos...Please wait...")
 
 var myVids=[
    "videos/01-16s_h264.mov", 
@@ -34,25 +34,27 @@ console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
 var percentLoaded = 0;
 
-var checkLoad = 
-  setInterval(function(){
+function checkLoad(){ 
+  var timeoutID = setInterval(function(){
     if(percentLoaded < 100){
       var bitsLoaded=0;
-      var bitTotal=0;
+      var bitsTotal=0;
       for(var i =0; i < vidElements.length; i++){
         bitsLoaded+=vidElements[i].buffered.end(0);
-        bitTotal+=vidElements[i].duration;
+        bitsTotal+=vidElements[i].duration;
         console.log("buffered: "+vidElements[1].buffered.end(0));
       }
-      percentLoaded=parseInt(((bitsLoaded/bitTotal)*100)); 
+      percentLoaded=parseInt(((bitsLoaded/bitsTotal)*100)); 
+      $('progress').val(percentLoaded);
     }
     else{
       console.log("percentLoaded: "+percentLoaded);
-      clearTimeout(checkLoad);
+      clearTimeout(timeoutID);
+      $('progress').val(percentLoaded);
       document.getElementById("loading").style.display="none";
       player();
     }
-  }, 200);
+  }, 200);}
 
 var player = 
   function(){
@@ -63,38 +65,23 @@ var player =
     videoPlayer.style.display="table";
     theVideo.style.display="block";
 
-    var playBtn = document.getElementById("btn_play");
     var prevBtn = document.getElementById("btn_prev");
     var nextBtn = document.getElementById("btn_next");
-
-    // play and pause
-    playBtn.addEventListener("click", function(){
-      if (theVideo.paused){
-        theVideo.play();
-        playBtn.textContent="PAUSE";
-      }
-      else{
-        theVideo.pause();
-        playBtn.textContent="PLAY";
-      }
-    });
 
     // iterate through video playlist backwards
     prevBtn.addEventListener("click", function(){
       if(vindex == 0){
-        // go to begining of first video and play
+        // go to begining of first video 
         theVideo.currentTime=0;
         theVideo.pause();
-        playBtn.textContent="PLAY";
       }
       else{
         theVideo.style.display="none";
         vindex--;
         theVideo = document.getElementById("video"+vindex);
+        theVideo.currentTime=0;
         theVideo.style.display="block";
         theVideo.pause();
-        playBtn.textContent="PLAY";
-
       }
     })
     // iterate through video playlist forwards
@@ -103,15 +90,14 @@ var player =
         theVideo.style.display="none";
         vindex++;
         theVideo = document.getElementById("video"+vindex);
+        theVideo.currentTime=0;
         theVideo.style.display="block";
         theVideo.pause();
-        playBtn.textContent="PLAY";
       }
       else{
-        // go to begining of last video and play
+        // go to begining of last video 
         theVideo.currentTime=0;
         theVideo.pause();
-        playBtn.textContent="PLAY";
 
       }
     })
@@ -159,6 +145,7 @@ function loadVid(vidArray, vidType, i){
         console.log("Loading video "+i+" into element");
         video.src = vid;
         video.type=vidType;
+        video.controls=true;
         vidElements.push(video);
    }
   }
