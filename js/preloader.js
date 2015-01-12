@@ -72,8 +72,7 @@ var player =
     prevBtn.addEventListener("click", function(){
       if(vindex == 0){
         // go to begining of first video 
-        theVideo.currentTime=0;
-        theVideo.pause();
+        prevBtn.disabled = true;
       }
       else{
         theVideo.style.display="none";
@@ -82,6 +81,7 @@ var player =
         theVideo.currentTime=0;
         theVideo.style.display="block";
         theVideo.pause();
+        nextBtn.disabled = false;
       }
     })
     // iterate through video playlist forwards
@@ -93,12 +93,11 @@ var player =
         theVideo.currentTime=0;
         theVideo.style.display="block";
         theVideo.pause();
+        prevBtn.disabled = false;
       }
       else{
-        // go to begining of last video 
-        theVideo.currentTime=0;
-        theVideo.pause();
-
+        // deactivate next button
+        nextBtn.disabled = true;
       }
     })
   }
