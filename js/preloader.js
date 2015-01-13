@@ -51,6 +51,7 @@ function checkLoad(){
     //   percentLoaded=parseInt(((bitsLoaded/bitsTotal)*100)); 
     //   $('progress').val(percentLoaded);
       percentLoaded = (vidElements.length+1) / (myVids.length+1) * 100;
+      $('progress').val(percentLoaded);
     }
     else{
       console.log("percentLoaded: "+percentLoaded);
