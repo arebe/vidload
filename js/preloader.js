@@ -32,20 +32,25 @@ var vidElements = [];
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
-var percentLoaded = 0;
+
 
 function checkLoad(){ 
+  var percentLoaded = 0;
   var timeoutID = setInterval(function(){
+    console.log("videlements.length: "+vidElements.length);
+    console.log("myVids.length: "+myVids.length);
     if(percentLoaded < 100){
-      var bitsLoaded=0;
-      var bitsTotal=0;
-      for(var i =0; i < vidElements.length; i++){
-        bitsLoaded+=vidElements[i].buffered.end(0);
-        bitsTotal+=vidElements[i].duration;
-        console.log("buffered: "+vidElements[1].buffered.end(0));
-      }
-      percentLoaded=parseInt(((bitsLoaded/bitsTotal)*100)); 
-      $('progress').val(percentLoaded);
+      // while this is clever, let's try something simpler
+    //   var bitsLoaded=0;
+    //   var bitsTotal=0;
+    //   for(var i =0; i < vidElements.length; i++){
+    //     bitsLoaded+=vidElements[i].buffered.end(0);
+    //     bitsTotal+=vidElements[i].duration;
+    //     console.log("buffered: "+vidElements[1].buffered.end(0));
+    //   }
+    //   percentLoaded=parseInt(((bitsLoaded/bitsTotal)*100)); 
+    //   $('progress').val(percentLoaded);
+      percentLoaded = (vidElements.length+1) / (myVids.length+1) * 100;
     }
     else{
       console.log("percentLoaded: "+percentLoaded);
@@ -54,7 +59,7 @@ function checkLoad(){
       document.getElementById("loading").style.display="none";
       player();
     }
-  }, 200);}
+  }, 100);}
 
 var player = 
   function(){
