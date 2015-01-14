@@ -67,7 +67,15 @@ var player =
     // iterate through video playlist backwards
     prevBtn.addEventListener("click", function(){
       if(vindex == 0){
-        // go to begining of first video 
+        prevBtn.disabled = true;
+      }
+      else if (vindex == 1) {
+        theVideo.style.display="none";
+        vindex--;
+        theVideo = document.getElementById("video"+vindex);
+        theVideo.currentTime=0;
+        theVideo.style.display="block";
+        theVideo.pause();
         prevBtn.disabled = true;
       }
       else{
@@ -82,7 +90,10 @@ var player =
     })
     // iterate through video playlist forwards
     nextBtn.addEventListener("click", function(){
-      if(vindex < (vidElements.length-1)){
+      if(vindex == vidElements.length-1){
+        nextBtn.disabled = true;
+      }
+      else if(vindex == vidElements.length-2){
         theVideo.style.display="none";
         vindex++;
         theVideo = document.getElementById("video"+vindex);
@@ -90,10 +101,16 @@ var player =
         theVideo.style.display="block";
         theVideo.pause();
         prevBtn.disabled = false;
+        nextBtn.disabled = true;
       }
       else{
-        // deactivate next button
-        nextBtn.disabled = true;
+        theVideo.style.display="none";
+        vindex++;
+        theVideo = document.getElementById("video"+vindex);
+        theVideo.currentTime=0;
+        theVideo.style.display="block";
+        theVideo.pause();
+        prevBtn.disabled = false;
       }
     })
   }
