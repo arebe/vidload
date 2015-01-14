@@ -50,7 +50,7 @@ function checkLoad(){
       document.getElementById("loading").style.display="none";
       player();
     }
-  }, 100);}
+  }, 400);}
 
 var player = 
   function(){
