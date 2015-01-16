@@ -18,13 +18,22 @@ var myVidsWebm=[
    "videos/05-22s_h264.webm",
 ]
 
+var myVidsOgg=[
+   "videos/01-16s_h264.ogv", 
+   "videos/02-18s_h264.ogv",  
+   "videos/03-13s_h264.ogv",
+   "videos/04-13s_h264.ogv",
+   "videos/05-22s_h264.ogv",
+]
+
 
 var vidElements = [];
 
 
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
-console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
+console.log("modernizr video ogg support? " + Modernizr.video.ogg);
+
 
 
 function checkLoad(){ 
@@ -116,10 +125,15 @@ var preLoader = function(){
     	loadVid(myVids, "video/h264", i);
 
     }
+    else if(Modernizr.video.ogg){
+      console.log("video " +i+ " filename: " + (myVidsOgg[i]));
+      loadVid(myVidsOgg, "video/ogg", i);
+    }
     else if(Modernizr.video.webm){
     	console.log("video " +i+ " filename: " + (myVidsWebm[i]));
     	loadVid(myVidsWebm, "video/webm", i);
     }
+
     else{
     	console.log("no html5 video support :( consider upgrading to a modern browser");
     }
