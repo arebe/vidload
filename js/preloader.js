@@ -120,7 +120,11 @@ var player =
 
 var preLoader = function(){
   for (var i = 0; i < myVids.length; i++) {
-    if(Modernizr.video.h264){
+    if(Modernizr.video.webm){
+      console.log("video " +i+ " filename: " + (myVidsWebm[i]));
+      loadVid(myVidsWebm, "video/webm", i);
+    }
+    else if(Modernizr.video.h264){
     	console.log("video " +i+ " filename: " + (myVids[i]));
     	loadVid(myVids, "video/h264", i);
 
@@ -129,11 +133,6 @@ var preLoader = function(){
       console.log("video " +i+ " filename: " + (myVidsOgg[i]));
       loadVid(myVidsOgg, "video/ogg", i);
     }
-    else if(Modernizr.video.webm){
-    	console.log("video " +i+ " filename: " + (myVidsWebm[i]));
-    	loadVid(myVidsWebm, "video/webm", i);
-    }
-
     else{
     	console.log("no html5 video support :( consider upgrading to a modern browser");
     }
