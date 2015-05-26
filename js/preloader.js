@@ -2,7 +2,9 @@
 
 console.log("Downloading videos...Please wait...")
 
-var myVids=[
+//==== Playlist: enter the file names here: ==========//
+
+var myVidsH264=[
    "videos/01-16s_h264.mov", 
    "videos/02-18s_h264.mov",	
    "videos/03-13s_h264.mov",
@@ -26,23 +28,31 @@ var myVidsOgg=[
    "videos/05-22s_h264.ogv",
 ]
 
+var randomOrder = true; // set to false if playlist order is non-random
 
+//==================================================//
+
+
+// html5 video elements
 var vidElements = [];
-
 
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
 console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 
+// this function will randomize the list of videos upon page load
+function randomizer(){
+  console.log("i'm randomizing the playlist order!");
+}
 
-
+// check the video loading progress and update the progress bar
 function checkLoad(){ 
   var percentLoaded = 0;
   var timeoutID = setInterval(function(){
     console.log("videlements.length: "+vidElements.length);
-    console.log("myVids.length: "+myVids.length);
+    console.log("myVidsH264.length: "+myVidsH264.length);
     if(percentLoaded < 100){
-      percentLoaded = (vidElements.length+1) / (myVids.length+1) * 100;
+      percentLoaded = (vidElements.length+1) / (myVidsH264.length+1) * 100;
       $('progress').val(percentLoaded);
     }
     else{
@@ -54,6 +64,7 @@ function checkLoad(){
     }
   }, 400);}
 
+// initialize video player and its UI 
 var player = 
   function(){
     var videoPlayer = document.getElementById("video_player");
@@ -118,30 +129,32 @@ var player =
   }
 
 
+// send the correct videos to the video loader
 var preLoader = function(){
-  for (var i = 0; i < myVids.length; i++) {
-    if(Modernizr.video.webm){
-      console.log("video " +i+ " filename: " + (myVidsWebm[i]));
-      loadVid(myVidsWebm, "video/webm", i);
-    }
-    else if(Modernizr.video.h264){
-    	console.log("video " +i+ " filename: " + (myVids[i]));
-    	loadVid(myVids, "video/h264", i);
+  var vidList = [];
 
-    }
-    else if(Modernizr.video.ogg){
-      console.log("video " +i+ " filename: " + (myVidsOgg[i]));
-      loadVid(myVidsOgg, "video/ogg", i);
-    }
-    else{
-    	console.log("no html5 video support :( consider upgrading to a modern browser");
-    }
+  // check browser compatibilty and initiate fall-backs
+  if (Modernizr.video.webm){  vidList = myVidsWebm; }
+  else if (Modernizr.video.h264){ vidList = myVidsH264; }
+  else if(Modernizr.video.ogg){ vidList = myVidsOgg; }
+  else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
+
+  // randomize the videos, if necessary
+  if (randomOrder){ randomizer(); }
+
+  // start loading the videos  
+  for (var i = 0; i < vidList.length; i++) {
+    console.log("video " +i+ " filename: " + (vidList[i]));
+    loadVid(myVidsWebm, "video/webm", i);
   }
+
+  // progress bar
   checkLoad();
 }
 
 preLoader();
 
+// load the videos asynchronously while the user waits
 function loadVid(vidArray, vidType, i){
 	var elementID = "video"+i;
     console.log("element id: "+elementID);
