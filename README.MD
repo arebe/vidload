@@ -3,7 +3,7 @@ HTML5 Video Preloader
 
 *Created by*: Rachel B [arebe.us](http://arebe.us)
 
-*Prototype Website*: [vidload.edgeofforever.net](http://vidload.edgeofforever.net)
+*Prototype Website*: [zebblerstudios.com/test/html5preloader](http://zebblerstudios.com/test/html5preloader)
 
 What's all this?
 ----------------

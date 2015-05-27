@@ -1,16 +1,23 @@
-// ajax from http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
-
 console.log("Downloading videos...Please wait...")
 
+//====================================================//
 //==== Playlist: enter the file names here: ==========//
 
 var myVidsH264=[
-   "videos/01-16s_h264.mov", 
-   "videos/02-18s_h264.mov",	
-   "videos/03-13s_h264.mov",
-   "videos/04-13s_h264.mov",
-   "videos/05-22s_h264.mov",
+   "videos/01-16s_h264.mp4", 
+   "videos/02-18s_h264.mp4",	
+   "videos/03-13s_h264.mp4",
+   "videos/04-13s_h264.mp4",
+   "videos/05-22s_h264.mp4",
 ]
+
+// var myVidsH264=[
+//    "videos/01-16s_h264.mov", 
+//    "videos/02-18s_h264.mov",  
+//    "videos/03-13s_h264.mov",
+//    "videos/04-13s_h264.mov",
+//    "videos/05-22s_h264.mov",
+// ]
 
 var myVidsWebm=[
    "videos/01-16s_h264.webm", 
@@ -30,8 +37,8 @@ var myVidsOgg=[
 
 var randomOrder = true; // set to false if playlist order is non-random
 
-//==================================================//
-
+//====================================================//
+//===================================================//
 
 // html5 video elements
 var vidElements = [];
@@ -40,9 +47,25 @@ console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
 console.log("modernizr video ogg support? " + Modernizr.video.ogg);
 
-// this function will randomize the list of videos upon page load
-function randomizer(){
-  console.log("i'm randomizing the playlist order!");
+// this function will randomly shuffle the list of videos upon page load
+// from http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
 
 // check the video loading progress and update the progress bar
@@ -134,13 +157,18 @@ var preLoader = function(){
   var vidList = [];
 
   // check browser compatibilty and initiate fall-backs
-  if (Modernizr.video.webm){  vidList = myVidsWebm; }
-  else if (Modernizr.video.h264){ vidList = myVidsH264; }
+  // if (Modernizr.video.webm){  vidList = myVidsWebm; }
+  // else if (Modernizr.video.h264){ vidList = myVidsH264; }
+  // else if(Modernizr.video.ogg){ vidList = myVidsOgg; }
+  // else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
+
+  if (Modernizr.video.h264){ vidList = myVidsH264; }
+  else if (Modernizr.video.webm){  vidList = myVidsWebm; }
   else if(Modernizr.video.ogg){ vidList = myVidsOgg; }
   else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
 
   // randomize the videos, if necessary
-  if (randomOrder){ randomizer(); }
+  if (randomOrder){ shuffle(vidList); }
 
   // start loading the videos  
   for (var i = 0; i < vidList.length; i++) {
@@ -155,6 +183,7 @@ var preLoader = function(){
 preLoader();
 
 // load the videos asynchronously while the user waits
+// based on http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
 function loadVid(vidArray, vidType, i){
 	var elementID = "video"+i;
     console.log("element id: "+elementID);

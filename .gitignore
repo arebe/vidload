@@ -8,5 +8,6 @@
 .Spotlight-V100
 .Trashes
 
-# large video for testing
+# videos for testing
 alone_together_c_sm.mp4
+videos/*
