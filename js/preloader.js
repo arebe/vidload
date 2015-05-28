@@ -155,16 +155,12 @@ var player =
 // send the correct videos to the video loader
 var preLoader = function(){
   var vidList = [];
+  var vidType ;
 
   // check browser compatibilty and initiate fall-backs
-  // if (Modernizr.video.webm){  vidList = myVidsWebm; }
-  // else if (Modernizr.video.h264){ vidList = myVidsH264; }
-  // else if(Modernizr.video.ogg){ vidList = myVidsOgg; }
-  // else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
-
-  if (Modernizr.video.h264){ vidList = myVidsH264; }
-  else if (Modernizr.video.webm){  vidList = myVidsWebm; }
-  else if(Modernizr.video.ogg){ vidList = myVidsOgg; }
+  if (Modernizr.video.h264){ vidList = myVidsH264; vidType = "video/mp4";}
+  else if (Modernizr.video.webm){  vidList = myVidsWebm; vidType = "video/webm";}
+  else if(Modernizr.video.ogg){ vidList = myVidsOgg; vidType = "video/ogg";}
   else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
 
   // randomize the videos, if necessary
@@ -172,36 +168,45 @@ var preLoader = function(){
 
   // start loading the videos  
   for (var i = 0; i < vidList.length; i++) {
+    // add form elements to track play count
+    $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
+    // add video element for each video
+    $("#videos").append('<video id="video'+i+'" width="800" height="450" > Your browser does not support the video tag. </video>');
+    // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
-    loadVid(myVidsWebm, "video/webm", i);
+    loadVid(vidList[i], vidType, i);
+    
   }
 
   // progress bar
   checkLoad();
 }
 
-preLoader();
+$(document).ready(preLoader());
 
 // load the videos asynchronously while the user waits
 // based on http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
-function loadVid(vidArray, vidType, i){
+function loadVid(vidFile, vidType, i){
 	var elementID = "video"+i;
-    console.log("element id: "+elementID);
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', vidArray[i], true);
+    xhr.open('GET', vidFile, true);
     xhr.responseType = 'blob';
     xhr.onload = function(e) {
     if (this.status == 200) {
-    	console.log("got it");
     	var myBlob = this.response;
     	var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
         // myBlob is now the blob that the object URL pointed to.
         var video = document.getElementById(elementID);
         video.style.display="none";
-        console.log("Loading video "+i+" into element");
+        console.log("Loading video "+vidFile+" into element video"+i);
         video.src = vid;
         video.type=vidType;
         video.controls=true;
+        /////START HERE
+        $(video).on('play', function(){
+          console.log("PLAYED "+video.played.length);
+          $('input[name="'+vidFile+']"').val(video.played.length);
+        })
         vidElements.push(video);
    }
   }
