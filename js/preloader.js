@@ -202,10 +202,10 @@ function loadVid(vidFile, vidType, i){
         video.src = vid;
         video.type=vidType;
         video.controls=true;
-        /////START HERE
+        // update hidden form with play count
         $(video).on('play', function(){
-          console.log("PLAYED "+video.played.length);
-          $('input[name="'+vidFile+']"').val(video.played.length);
+          var v = parseInt($('input[name="'+vidFile+'"]').val());
+          $('input[name="'+vidFile+'"]').val(++v);
         })
         vidElements.push(video);
    }
