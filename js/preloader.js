@@ -1,5 +1,3 @@
-console.log("Downloading videos...Please wait...")
-
 //====================================================//
 //==== Playlist: enter the file names here: ==========//
 
@@ -41,13 +39,13 @@ var randomOrder = true; // set to false if playlist order is non-random
 
 ///TBD
 var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like a UI feature
-
+var doubleplay = false; // play each video twice
 
 //=== UI control toggles - set to false to remove from UI 
-var playOn = true;
+var playOn = true; // done
 var ffOn = true;
 var rwOn = true;
-var skipOn = true;
+var skipOn = true; // done
 var volumeOn =  true;
 var durationOn = true;
 var fullscOn = true;
@@ -99,96 +97,103 @@ function checkLoad(){
       clearTimeout(timeoutID);
       $('progress').val(percentLoaded);
       document.getElementById("loading").style.display="none";
-      player.init();
+      player();
     }
   }, 400);}
 
 // initialize video player and its UI 
-var player = {
-  // player properties
-  vindex: 0,
-  videoPlayer: document.getElementById("video_player"),
-  theVideo: document.getElementById("video"+this.vindex),
-  
-  // player methods
-  init: function(){
-    
-    this.videoPlayer.style.display="table";
-    this.theVideo.style.display="block";
+var player = function(){
+  // video elements
+  var vindex = 0;
+  var videoPlayer, theVideo;
 
-    // UI controls
-    if(playOn){
-      this.playUI(this.vindex, this.theVideo);
-    }
-    if (skipOn){
-      this.skipUI(this.theVideo);
-    }
+  // buttons - so they can access each other
+  var prevBtn, nextBtn, playBtn, ffBtn, rwBtn;
 
-  },
+  // player state
+  var playing, speed, ffing, rwing;
 
-  skipUI: function(){
+  videoPlayer = document.getElementById("video_player"); 
+  theVideo = document.getElementById("video"+vindex);
+
+  videoPlayer.style.display="table";
+  theVideo.style.display="block";
+
+  // UI controls
+  if(playOn){ playUI(); }
+  if(skipOn){ skipUI(); }
+  if(ffOn){ ffUI(); }
+  if(rwOn){ rwUI(); }
+
+
+  function skipUI(){
       $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
       $("#video_player").append('<button type="button" class="btn_skip" id="btn_next" > &gt; &gt; </button>');
 
 
-      var prevBtn = document.getElementById("btn_prev");
-      var nextBtn = document.getElementById("btn_next");
+      prevBtn = document.getElementById("btn_prev");
+      nextBtn = document.getElementById("btn_next");
 
       // iterate through video playlist backwards
       prevBtn.addEventListener("click", function(){
-        if(this.vindex == 0){
+        if(vindex == 0){
           prevBtn.disabled = true;
         }
-        else if (this.vindex == 1) {
-          this.theVideo.style.display="none";
-          this.vindex--;
-          this.theVideo = document.getElementById("video"+this.vindex);
-          this.theVideo.currentTime=0;
-          this.theVideo.style.display="block";
-          this.theVideo.pause();
+        else if (vindex == 1) {
+          theVideo.style.display="none";
+          vindex--;
+          theVideo = document.getElementById("video"+vindex);
+          theVideo.currentTime=0;
+          theVideo.style.display="block";
+          theVideo.pause();
           prevBtn.disabled = true;
         }
         else{
-          this.theVideo.style.display="none";
-          this.vindex--;
-          this.theVideo = document.getElementById("video"+this.vindex);
-          this.theVideo.currentTime=0;
-          this.theVideo.style.display="block";
-          this.theVideo.pause();
+          theVideo.style.display="none";
+          vindex--;
+          theVideo = document.getElementById("video"+vindex);
+          theVideo.currentTime=0;
+          theVideo.style.display="block";
+          theVideo.pause();
           nextBtn.disabled = false;
         }
+        // also change the play button state
+        normalizeUI();
       })
       // iterate through video playlist forwards
       nextBtn.addEventListener("click", function(){
-        if(this.vindex == vidElements.length-1){
+        if(vindex == vidElements.length-1){
           nextBtn.disabled = true;
         }
-        else if(this.vindex == vidElements.length-2){
-          this.theVideo.style.display="none";
-          this.vindex++;
-          this.theVideo = document.getElementById("video"+this.vindex);
-          this.theVideo.currentTime=0;
-          this.theVideo.style.display="block";
-          this.theVideo.pause();
+        else if(vindex == vidElements.length-2){
+          theVideo.style.display="none";
+          vindex++;
+          theVideo = document.getElementById("video"+vindex);
+          theVideo.currentTime=0;
+          theVideo.style.display="block";
+          theVideo.pause();
           prevBtn.disabled = false;
           nextBtn.disabled = true;
         }
         else{
-          this.theVideo.style.display="none";
-          this.vindex++;
-          this.theVideo = document.getElementById("video"+this.vindex);
-          this.theVideo.currentTime=0;
-          this.theVideo.style.display="block";
-          this.theVideo.pause();
+          theVideo.style.display="none";
+          vindex++;
+          theVideo = document.getElementById("video"+vindex);
+          theVideo.currentTime=0;
+          theVideo.style.display="block";
+          theVideo.pause();
           prevBtn.disabled = false;
         }
+        // also change the play button state
+        normalizeUI();
       })
-  },
+    }
 
-  playUI: function(vindex, theVideo){
+
+  function playUI(){
     $("#video_player").append('<input type="button" class="btn_skip" id="btn_play" value=" > "></input>');
-    var playBtn = document.getElementById("btn_play");
-    var playing = false;
+    playBtn = document.getElementById("btn_play");
+    playing = false;
     playBtn.addEventListener("click", function(){
       if(!playing){
         theVideo.play();
@@ -201,9 +206,47 @@ var player = {
       }
       playing = !playing;
     })
-  },
+  }
 
-}
+  function ffUI(){
+     $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_ff" value=" >>| "></input>');
+    ffBtn = $("#btn_ff");
+    speed = 0;
+    var ffing = false;
+    ffBtn.click(function(){
+      speed = !ffing ? 1.5 : 1;
+      theVideo.playbackRate = speed;
+      ffing = !ffing;
+      console.log("speed: "+ speed);
+    })
+  }
+
+  function rwUI(){
+     $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_rw" value=" |<< "></input>');
+    rwBtn = $("#btn_rw");
+    speed = 0;
+    var rwing = false;
+    rwBtn.click(function(){
+      speed = !rwing ? (-10) : 1;
+      theVideo.playbackRate = speed;
+      rwing = !rwing;
+      console.log("speed: "+ speed);
+    })
+  }
+
+  function normalizeUI(){
+    if(playOn){
+      playBtn.value = " > ";
+      playing = false;
+    }
+    if(ffOn || rwOn){
+      speed = 1;
+      ffing = false;
+      rwing = false;
+    }
+  }
+
+} // end player function
 
 
 

@@ -38,7 +38,7 @@
 }
 
 
-#btn_next, #btn_prev {
+#btn_next, #btn_prev, #btn_ff, #btn_rw {
   background: #1c2a45;
   background-image: -webkit-linear-gradient(top, #1c2a45, #8ea3cc);
   background-image: -moz-linear-gradient(top, #1c2a45, #8ea3cc);
@@ -56,7 +56,7 @@
   text-decoration: none;
 }
 
-#btn_next:hover, #btn_prev:hover {
+#btn_next:hover, #btn_prev:hover, #btn_ff:hover, btn_rw:hover {
   background: #4f4875;
   background-image: -webkit-linear-gradient(top, #4f4875, #989cf5);
   background-image: -moz-linear-gradient(top, #4f4875, #989cf5);
