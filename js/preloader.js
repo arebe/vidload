@@ -9,6 +9,8 @@ var myVidsH264=[
    "videos/03-13s_h264.mp4",
    "videos/04-13s_h264.mp4",
    "videos/05-22s_h264.mp4",
+   "videos/magenta_test.mp4",
+   "videos/magenta_test2.mp4",
 ]
 
 // var myVidsH264=[
@@ -36,6 +38,20 @@ var myVidsOgg=[
 ]
 
 var randomOrder = true; // set to false if playlist order is non-random
+
+///TBD
+var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like a UI feature
+
+
+//=== UI control toggles - set to false to remove from UI 
+var playOn = true;
+var ffOn = true;
+var rwOn = true;
+var skipOn = true;
+var volumeOn =  true;
+var durationOn = true;
+var fullscOn = true;
+
 
 //====================================================//
 //===================================================//
@@ -83,76 +99,115 @@ function checkLoad(){
       clearTimeout(timeoutID);
       $('progress').val(percentLoaded);
       document.getElementById("loading").style.display="none";
-      player();
+      player.init();
     }
   }, 400);}
 
 // initialize video player and its UI 
-var player = 
-  function(){
-    var videoPlayer = document.getElementById("video_player");
-    var vindex = 0;
-    var theVideo = document.getElementById("video"+vindex);
+var player = {
+  // player properties
+  vindex: 0,
+  videoPlayer: document.getElementById("video_player"),
+  theVideo: document.getElementById("video"+this.vindex),
+  
+  // player methods
+  init: function(){
+    
+    this.videoPlayer.style.display="table";
+    this.theVideo.style.display="block";
 
-    videoPlayer.style.display="table";
-    theVideo.style.display="block";
+    // UI controls
+    if(playOn){
+      this.playUI(this.vindex, this.theVideo);
+    }
+    if (skipOn){
+      this.skipUI(this.theVideo);
+    }
 
-    var prevBtn = document.getElementById("btn_prev");
-    var nextBtn = document.getElementById("btn_next");
+  },
 
-    // iterate through video playlist backwards
-    prevBtn.addEventListener("click", function(){
-      if(vindex == 0){
-        prevBtn.disabled = true;
-      }
-      else if (vindex == 1) {
-        theVideo.style.display="none";
-        vindex--;
-        theVideo = document.getElementById("video"+vindex);
-        theVideo.currentTime=0;
-        theVideo.style.display="block";
-        theVideo.pause();
-        prevBtn.disabled = true;
+  skipUI: function(){
+      $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
+      $("#video_player").append('<button type="button" class="btn_skip" id="btn_next" > &gt; &gt; </button>');
+
+
+      var prevBtn = document.getElementById("btn_prev");
+      var nextBtn = document.getElementById("btn_next");
+
+      // iterate through video playlist backwards
+      prevBtn.addEventListener("click", function(){
+        if(this.vindex == 0){
+          prevBtn.disabled = true;
+        }
+        else if (this.vindex == 1) {
+          this.theVideo.style.display="none";
+          this.vindex--;
+          this.theVideo = document.getElementById("video"+this.vindex);
+          this.theVideo.currentTime=0;
+          this.theVideo.style.display="block";
+          this.theVideo.pause();
+          prevBtn.disabled = true;
+        }
+        else{
+          this.theVideo.style.display="none";
+          this.vindex--;
+          this.theVideo = document.getElementById("video"+this.vindex);
+          this.theVideo.currentTime=0;
+          this.theVideo.style.display="block";
+          this.theVideo.pause();
+          nextBtn.disabled = false;
+        }
+      })
+      // iterate through video playlist forwards
+      nextBtn.addEventListener("click", function(){
+        if(this.vindex == vidElements.length-1){
+          nextBtn.disabled = true;
+        }
+        else if(this.vindex == vidElements.length-2){
+          this.theVideo.style.display="none";
+          this.vindex++;
+          this.theVideo = document.getElementById("video"+this.vindex);
+          this.theVideo.currentTime=0;
+          this.theVideo.style.display="block";
+          this.theVideo.pause();
+          prevBtn.disabled = false;
+          nextBtn.disabled = true;
+        }
+        else{
+          this.theVideo.style.display="none";
+          this.vindex++;
+          this.theVideo = document.getElementById("video"+this.vindex);
+          this.theVideo.currentTime=0;
+          this.theVideo.style.display="block";
+          this.theVideo.pause();
+          prevBtn.disabled = false;
+        }
+      })
+  },
+
+  playUI: function(vindex, theVideo){
+    $("#video_player").append('<input type="button" class="btn_skip" id="btn_play" value=" > "></input>');
+    var playBtn = document.getElementById("btn_play");
+    var playing = false;
+    playBtn.addEventListener("click", function(){
+      if(!playing){
+        theVideo.play();
+        playBtn.value=" || ";
+        
       }
       else{
-        theVideo.style.display="none";
-        vindex--;
-        theVideo = document.getElementById("video"+vindex);
-        theVideo.currentTime=0;
-        theVideo.style.display="block";
         theVideo.pause();
-        nextBtn.disabled = false;
+        playBtn.value=" > ";
       }
+      playing = !playing;
     })
-    // iterate through video playlist forwards
-    nextBtn.addEventListener("click", function(){
-      if(vindex == vidElements.length-1){
-        nextBtn.disabled = true;
-      }
-      else if(vindex == vidElements.length-2){
-        theVideo.style.display="none";
-        vindex++;
-        theVideo = document.getElementById("video"+vindex);
-        theVideo.currentTime=0;
-        theVideo.style.display="block";
-        theVideo.pause();
-        prevBtn.disabled = false;
-        nextBtn.disabled = true;
-      }
-      else{
-        theVideo.style.display="none";
-        vindex++;
-        theVideo = document.getElementById("video"+vindex);
-        theVideo.currentTime=0;
-        theVideo.style.display="block";
-        theVideo.pause();
-        prevBtn.disabled = false;
-      }
-    })
-  }
+  },
+
+}
 
 
-// send the correct videos to the video loader
+
+// send the appropriate videos to the video loader
 var preLoader = function(){
   var vidList = [];
   var vidType ;
@@ -171,7 +226,7 @@ var preLoader = function(){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video element for each video
-    $("#videos").append('<video id="video'+i+'" width="800" height="450" > Your browser does not support the video tag. </video>');
+    $("#videos").append('<video id="video'+i+'"  > Your browser does not support the video tag. </video>');
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -213,6 +268,7 @@ function loadVid(vidFile, vidType, i){
   xhr.send();
 
 }
+
 
 
  
