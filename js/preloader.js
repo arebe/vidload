@@ -122,8 +122,9 @@ var player = function(){
   // UI controls
   if(playOn){ playUI(); }
   if(skipOn){ skipUI(); }
-  if(ffOn){ ffUI(); }
   if(rwOn){ rwUI(); }
+  if(ffOn){ ffUI(); }
+
 
 
   function skipUI(){
