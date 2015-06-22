@@ -111,7 +111,7 @@ var player = function(){
   var prevBtn, nextBtn, playBtn, ffBtn, rwBtn;
 
   // player state
-  var playing, speed, ffing, rwing;
+  var playing, speed, ffing, rwing, rwinterval;
 
   videoPlayer = document.getElementById("video_player"); 
   theVideo = document.getElementById("video"+vindex);
@@ -122,7 +122,7 @@ var player = function(){
   // UI controls
   if(playOn){ playUI(); }
   if(skipOn){ skipUI(); }
-  if(rwOn){ rwUI(); }
+  if(rwOn){ rwUI(-0.1); }
   if(ffOn){ ffUI(); }
 
 
@@ -222,16 +222,29 @@ var player = function(){
     })
   }
 
-  function rwUI(){
+  function rwUI(rate){
      $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_rw" value=" |<< "></input>');
     rwBtn = $("#btn_rw");
     speed = 0;
     var rwing = false;
     rwBtn.click(function(){
-      speed = !rwing ? (-10) : 1;
-      theVideo.playbackRate = speed;
+      rwinterval = setInterval(function(){
+        theVideo.playbackRate = 1.0;
+        if(theVideo.currentTime == 0){
+          clearInterval(rwinterval);
+          theVideo.pause();
+        }
+        else{
+          theVideo.currentTime += rate;
+        }
+      }, 30);
+      // speed = !rwing ? (rate) : 1;
+      // while (theVideo.currentTime != 0){
+      //   var now = theVideo.currentTime;
+      //   theVideo.currentTime = now + rate;
+      // }
       rwing = !rwing;
-      console.log("speed: "+ speed);
+      // console.log("speed: "+ speed);
     })
   }
 
