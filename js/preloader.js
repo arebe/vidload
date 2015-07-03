@@ -126,7 +126,6 @@ var player = function(){
   if(rwOn){ rwUI(-0.1); }
   if(ffOn){ ffUI(); }
   if(volumeOn){ volUI(); }
-  if( doubleplay ){ doubleplay(); }
 
 
 
