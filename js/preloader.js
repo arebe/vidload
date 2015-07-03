@@ -118,14 +118,15 @@ var player = function(){
   theVideo = document.getElementById("video"+vindex);
 
   videoPlayer.style.display="table";
-  theVideo.style.display="block";
+  // theVideo.style.display="block";
+  vidjs("video"+vindex);
 
   // UI controls
-  if(playOn){ playUI(); }
+  // if(playOn){ playUI(); }
   if(skipOn){ skipUI(); }
-  if(rwOn){ rwUI(-0.1); }
-  if(ffOn){ ffUI(); }
-  if(volumeOn){ volUI(); }
+  // if(rwOn){ rwUI(-0.1); }
+  // if(ffOn){ ffUI(); }
+  // if(volumeOn){ volUI(); }
 
 
 
@@ -192,6 +193,11 @@ var player = function(){
       })
     }
 
+  function vidjs(vidElement){
+    videojs(vidElement, {}, function(){
+      console.log("initializing video js player for "+vidElement);
+    })
+  }
 
   function playUI(){
     $("#video_player").append('<input type="button" class="btn_skip" id="btn_play" value=" > "></input>');
@@ -339,7 +345,7 @@ function loadVid(vidFile, vidType, i){
         video.style.display="none";
         console.log("Loading video "+vidFile+" into element video"+i);
         video.src = vid;
-        video.type=vidType;
+        video.type=vidType ;
         video.controls=true;
         // update hidden form with play count
         $(video).on('play', function(){
