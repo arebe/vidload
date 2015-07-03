@@ -35,7 +35,7 @@ var myVidsOgg=[
    "videos/05-22s_h264.ogv",
 ]
 
-var randomOrder = true; // set to false if playlist order is non-random
+var randomOrder = true; // done - set to false if playlist order is non-random
 
 ///TBD
 var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like a UI feature
@@ -43,10 +43,11 @@ var doubleplay = false; // play each video twice
 
 //=== UI control toggles - set to false to remove from UI 
 var playOn = true; // done
-var ffOn = true;
-var rwOn = true;
+var ffOn = true; // uhh
+var rwOn = true; // wat
 var skipOn = true; // done
 var volumeOn =  true;
+var muteOn = true;
 var durationOn = true;
 var fullscOn = true;
 
@@ -124,6 +125,8 @@ var player = function(){
   if(skipOn){ skipUI(); }
   if(rwOn){ rwUI(-0.1); }
   if(ffOn){ ffUI(); }
+  if(volumeOn){ volUI(); }
+  if( doubleplay ){ doubleplay(); }
 
 
 
@@ -197,6 +200,7 @@ var player = function(){
     playing = false;
     playBtn.addEventListener("click", function(){
       if(!playing){
+        normalizeUI();
         theVideo.play();
         playBtn.value=" || ";
         
@@ -219,32 +223,56 @@ var player = function(){
       theVideo.playbackRate = speed;
       ffing = !ffing;
       console.log("speed: "+ speed);
+      theVideo.play();
     })
   }
 
   function rwUI(rate){
      $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_rw" value=" |<< "></input>');
     rwBtn = $("#btn_rw");
-    speed = 0;
     var rwing = false;
     rwBtn.click(function(){
-      rwinterval = setInterval(function(){
-        theVideo.playbackRate = 1.0;
-        if(theVideo.currentTime == 0){
-          clearInterval(rwinterval);
-          theVideo.pause();
-        }
-        else{
-          theVideo.currentTime += rate;
-        }
-      }, 30);
+      rwing = !rwing;
+      if(rwing){
+        rwinterval = setInterval(function(){
+          theVideo.playbackRate = 1.0;
+          if(theVideo.currentTime <= rate){
+            clearInterval(rwinterval);
+            theVideo.pause();
+            normalizeUI();
+          }
+          else{
+            theVideo.currentTime += rate;
+          }
+          console.log("current time: "+ theVideo.currentTime);
+        }, 30);
+      }
+      else{
+        normalizeUI();
+      }
+      
       // speed = !rwing ? (rate) : 1;
       // while (theVideo.currentTime != 0){
       //   var now = theVideo.currentTime;
       //   theVideo.currentTime = now + rate;
       // }
-      rwing = !rwing;
+
       // console.log("speed: "+ speed);
+    })
+  }
+
+  function volUI(){
+    $("#video_player").append('<div id="volume" style="width:260px; margin:15px;"></div>');
+    $("#volume").slider({
+      value: 60, 
+      orientation: "horizontal",
+      range: "min",
+      animate: true
+    })
+    volSdr = document.getElementById("volume");
+    playing = false;
+    volSdr.addEventListener("click", function(){
+      //stuff linking volume and slider value
     })
   }
 
