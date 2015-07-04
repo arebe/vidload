@@ -104,6 +104,11 @@ function checkLoad(){
 
 // initialize video player and its UI 
 var player = function(){
+  // add videojs player to each video
+  for (var i = 0; i < vidElements.length; i++){
+    addVjs("video"+i);
+  }
+
   // video elements
   var vindex = 0;
   var videoPlayer, theVideo;
@@ -118,8 +123,8 @@ var player = function(){
   theVideo = document.getElementById("video"+vindex);
 
   videoPlayer.style.display="table";
-  // theVideo.style.display="block";
-  vidjs("video"+vindex);
+  theVideo.style.display="block";
+  showVjs("video"+vindex);
 
   // UI controls
   // if(playOn){ playUI(); }
@@ -144,25 +149,19 @@ var player = function(){
           prevBtn.disabled = true;
         }
         else if (vindex == 1) {
-          theVideo.style.display="none";
+          hideVjs("video"+vindex);
           vindex--;
-          theVideo = document.getElementById("video"+vindex);
-          theVideo.currentTime=0;
-          theVideo.style.display="block";
-          theVideo.pause();
+          showVjs("video"+vindex);
           prevBtn.disabled = true;
         }
         else{
-          theVideo.style.display="none";
+          hideVjs("video"+vindex);        
           vindex--;
-          theVideo = document.getElementById("video"+vindex);
-          theVideo.currentTime=0;
-          theVideo.style.display="block";
-          theVideo.pause();
+          showVjs("video"+vindex);
           nextBtn.disabled = false;
         }
         // also change the play button state
-        normalizeUI();
+        // normalizeUI();
       })
       // iterate through video playlist forwards
       nextBtn.addEventListener("click", function(){
@@ -170,33 +169,48 @@ var player = function(){
           nextBtn.disabled = true;
         }
         else if(vindex == vidElements.length-2){
-          theVideo.style.display="none";
+          hideVjs("video"+vindex);
           vindex++;
-          theVideo = document.getElementById("video"+vindex);
-          theVideo.currentTime=0;
-          theVideo.style.display="block";
-          theVideo.pause();
+          showVjs("video"+vindex);
+          // theVideo.pause();
           prevBtn.disabled = false;
           nextBtn.disabled = true;
         }
         else{
-          theVideo.style.display="none";
+          hideVjs("video"+vindex);
           vindex++;
-          theVideo = document.getElementById("video"+vindex);
-          theVideo.currentTime=0;
-          theVideo.style.display="block";
-          theVideo.pause();
+          showVjs("video"+vindex);
           prevBtn.disabled = false;
         }
         // also change the play button state
-        normalizeUI();
+        // normalizeUI();
       })
     }
 
-  function vidjs(vidElement){
+  function addVjs(vidElement){
+    theVideo = document.getElementById(vidElement);
+    // theVideo.style.display="none";
     videojs(vidElement, {}, function(){
+      // $("#"+vidElement).addClass("video-js vjs-default-skin");
       console.log("initializing video js player for "+vidElement);
     })
+  }
+
+  function showVjs(vidElement){
+    theVideo = document.getElementById(vidElement+"_html5_api");
+    theVideo.style.display="block";
+    theVjs = document.getElementById(vidElement);
+    theVjs.style.display="block";
+    $("#"+vidElement).addClass("video-js vjs-default-skin");
+    console.log("showing video js player for "+vidElement);
+  }
+
+  function hideVjs(vidElement){
+    var oldVideo = document.getElementById(vidElement);
+    // videojs(oldPlayer).dispose();
+    oldVideo.style.display="none";
+    $("#"+vidElement).removeClass("video-js vjs-default-skin");
+    console.log("player hidden for "+vidElement);
   }
 
   function playUI(){
