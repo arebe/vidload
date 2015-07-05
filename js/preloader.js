@@ -106,7 +106,11 @@ function checkLoad(){
 var player = function(){
   // add videojs player to each video
   for (var i = 0; i < vidElements.length; i++){
-    addVjs("video"+i);
+    var vw = $("#video"+i).prop('videoWidth');
+    var vh = $("#video"+i).prop('videoHeight');
+    var options = {};
+    // add options for controls based on toggled options or whatever
+    addVjs("video"+i, vw, vh);
   }
 
   // video elements
@@ -187,10 +191,10 @@ var player = function(){
       })
     }
 
-  function addVjs(vidElement){
+  function addVjs(vidElement, vw, vh){
     theVideo = document.getElementById(vidElement);
     // theVideo.style.display="none";
-    videojs(vidElement, {}, function(){
+    videojs(vidElement, {"width": vw, "height": vh}, function(){
       // $("#"+vidElement).addClass("video-js vjs-default-skin");
       console.log("initializing video js player for "+vidElement);
     })
@@ -207,7 +211,9 @@ var player = function(){
 
   function hideVjs(vidElement){
     var oldVideo = document.getElementById(vidElement);
-    // videojs(oldPlayer).dispose();
+    // reset to beginning 
+    videojs(oldVideo).pause();
+    videojs(oldVideo).currentTime(0);
     oldVideo.style.display="none";
     $("#"+vidElement).removeClass("video-js vjs-default-skin");
     console.log("player hidden for "+vidElement);
