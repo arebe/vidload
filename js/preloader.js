@@ -84,6 +84,35 @@ function shuffle(array) {
   return array;
 }
 
+// check the file sizes n the server 
+function checkSizes(files){
+  var fileBytes;
+  // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
+  for (var i = 0; i < files.length; i++){
+    get_filesize(files[i], function(filesize){
+      console.log("file of size: "+filesize);
+      fileBytes += filesize;
+    });
+    
+  }
+  console.log("total fileBytes: "+fileBytes);
+
+  function get_filesize(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("HEAD", url, true); // Notice "HEAD" instead of "GET",
+                                 //  to get only the header
+    xhr.onreadystatechange = function() {
+        if (this.readyState == this.DONE) {
+            callback(parseInt(xhr.getResponseHeader("Content-Length")));
+        }
+    };
+    xhr.send();
+
+    // return fileBytes;
+  }
+
+}
+
 // check the video loading progress and update the progress bar
 function checkLoad(){ 
   var percentLoaded = 0;
@@ -250,6 +279,9 @@ var preLoader = function(){
   // randomize the videos, if necessary
   if (randomOrder){ shuffle(vidList); }
 
+  // check file sizes for progress bar
+  checkSizes(vidList);
+
   // start loading the videos  
   for (var i = 0; i < vidList.length; i++) {
     // add form elements to track play count
@@ -272,27 +304,27 @@ $(document).ready(preLoader());
 // based on http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
 function loadVid(vidFile, vidType, i){
 	var elementID = "video"+i;
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', vidFile, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function(e) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', vidFile, true);
+  xhr.responseType = 'blob';
+  xhr.onload = function(e) {
     if (this.status == 200) {
-    	var myBlob = this.response;
-    	var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
-        // myBlob is now the blob that the object URL pointed to.
-        var video = document.getElementById(elementID);
-        video.style.display="none";
-        console.log("Loading video "+vidFile+" into element video"+i);
-        video.src = vid;
-        video.type=vidType ;
-        video.controls=true;
-        // update hidden form with play count
-        $(video).on('play', function(){
-          var v = parseInt($('input[name="'+vidFile+'"]').val());
-          $('input[name="'+vidFile+'"]').val(++v);
-        })
-        vidElements.push(video);
-   }
+      var myBlob = this.response;
+      var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
+      // myBlob is now the blob that the object URL pointed to.
+      var video = document.getElementById(elementID);
+      video.style.display="none";
+      console.log("Loading video "+vidFile+" into element video"+i);
+      video.src = vid;
+      video.type=vidType ;
+      video.controls=true;
+      // update hidden form with play count
+      $(video).on('play', function(){
+        var v = parseInt($('input[name="'+vidFile+'"]').val());
+        $('input[name="'+vidFile+'"]').val(++v);
+      })
+      vidElements.push(video);
+    }
   }
   xhr.send();
 
