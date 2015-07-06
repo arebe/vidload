@@ -42,13 +42,14 @@ var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like
 var doubleplay = false; // play each video twice
 
 //=== UI control toggles - set to false to remove from UI 
-var playOn = true; // done
+var playOn = true;
 var ffOn = true; // uhh
 var rwOn = true; // wat
-var skipOn = true; // done
+var skipOn = true; 
 var volumeOn =  true;
 var muteOn = true;
 var durationOn = true;
+var seekOn = true;
 var fullscOn = true;
 
 
@@ -106,11 +107,26 @@ function checkLoad(){
 var player = function(){
   // add videojs player to each video
   for (var i = 0; i < vidElements.length; i++){
-    var vw = $("#video"+i).prop('videoWidth');
-    var vh = $("#video"+i).prop('videoHeight');
-    var options = {};
+    var options = {
+      "width": $("#video"+i).prop('videoWidth'),
+      "height": $("#video"+i).prop('videoHeight'),
+      controlBar: {
+        playToggle: (playOn ? true : false),
+        fullscreenToggle: (fullscOn ? true : false),
+        currentTimeDisplay: (durationOn ? true : false),
+        durationDisplay: (durationOn ? true : false),
+        remainingTimeDisplay: (durationOn ? true : false),
+        timeDivider: (durationOn ? true : false),
+        progressControl: {
+          seekBar: (seekOn ? true : false),
+        },
+        volumeControl: (volumeOn ? true : false),
+        muteToggle: (muteOn ? true : false),
+      },
+    };
     // add options for controls based on toggled options or whatever
-    addVjs("video"+i, vw, vh);
+
+    addVjs("video"+i, options);
   }
 
   // video elements
@@ -164,8 +180,6 @@ var player = function(){
           showVjs("video"+vindex);
           nextBtn.disabled = false;
         }
-        // also change the play button state
-        // normalizeUI();
       })
       // iterate through video playlist forwards
       nextBtn.addEventListener("click", function(){
@@ -186,16 +200,13 @@ var player = function(){
           showVjs("video"+vindex);
           prevBtn.disabled = false;
         }
-        // also change the play button state
-        // normalizeUI();
+
       })
     }
 
-  function addVjs(vidElement, vw, vh){
+  function addVjs(vidElement, options){
     theVideo = document.getElementById(vidElement);
-    // theVideo.style.display="none";
-    videojs(vidElement, {"width": vw, "height": vh}, function(){
-      // $("#"+vidElement).addClass("video-js vjs-default-skin");
+    videojs(vidElement, options, function(){
       console.log("initializing video js player for "+vidElement);
     })
   }
@@ -219,99 +230,7 @@ var player = function(){
     console.log("player hidden for "+vidElement);
   }
 
-  function playUI(){
-    $("#video_player").append('<input type="button" class="btn_skip" id="btn_play" value=" > "></input>');
-    playBtn = document.getElementById("btn_play");
-    playing = false;
-    playBtn.addEventListener("click", function(){
-      if(!playing){
-        normalizeUI();
-        theVideo.play();
-        playBtn.value=" || ";
-        
-      }
-      else{
-        theVideo.pause();
-        playBtn.value=" > ";
-      }
-      playing = !playing;
-    })
-  }
 
-  function ffUI(){
-     $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_ff" value=" >>| "></input>');
-    ffBtn = $("#btn_ff");
-    speed = 0;
-    var ffing = false;
-    ffBtn.click(function(){
-      speed = !ffing ? 1.5 : 1;
-      theVideo.playbackRate = speed;
-      ffing = !ffing;
-      console.log("speed: "+ speed);
-      theVideo.play();
-    })
-  }
-
-  function rwUI(rate){
-     $("#video_player").append('<input type="button" class="btn_ffrw" id="btn_rw" value=" |<< "></input>');
-    rwBtn = $("#btn_rw");
-    var rwing = false;
-    rwBtn.click(function(){
-      rwing = !rwing;
-      if(rwing){
-        rwinterval = setInterval(function(){
-          theVideo.playbackRate = 1.0;
-          if(theVideo.currentTime <= rate){
-            clearInterval(rwinterval);
-            theVideo.pause();
-            normalizeUI();
-          }
-          else{
-            theVideo.currentTime += rate;
-          }
-          console.log("current time: "+ theVideo.currentTime);
-        }, 30);
-      }
-      else{
-        normalizeUI();
-      }
-      
-      // speed = !rwing ? (rate) : 1;
-      // while (theVideo.currentTime != 0){
-      //   var now = theVideo.currentTime;
-      //   theVideo.currentTime = now + rate;
-      // }
-
-      // console.log("speed: "+ speed);
-    })
-  }
-
-  function volUI(){
-    $("#video_player").append('<div id="volume" style="width:260px; margin:15px;"></div>');
-    $("#volume").slider({
-      value: 60, 
-      orientation: "horizontal",
-      range: "min",
-      animate: true
-    })
-    volSdr = document.getElementById("volume");
-    playing = false;
-    volSdr.addEventListener("click", function(){
-      //stuff linking volume and slider value
-    })
-  }
-
-  function normalizeUI(){
-    if(playOn){
-      playBtn.value = " > ";
-      playing = false;
-    }
-    if(ffOn || rwOn){
-      speed = 1;
-      ffing = false;
-      rwing = false;
-    }
-  }
 
 } // end player function
 
