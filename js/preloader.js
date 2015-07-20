@@ -97,16 +97,21 @@ function shuffle(array) {
 
 // check the file sizes on the server 
 function checkSizes(files){
-  var fileBytes;
+  var fileBytes=0;
   // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
   for (var i = 0; i < files.length; i++){
     get_filesize(files[i], function(filesize){
       console.log("file of size: "+filesize);
-      fileBytes += filesize;
+      fileBytes += parseInt(filesize);
     });
+
+    if (i == files.length-1){
+      console.log("total fileBytes: "+fileBytes);
+      return fileBytes;
+    }
     
   }
-  console.log("total fileBytes: "+fileBytes);
+
 
   function get_filesize(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -118,10 +123,7 @@ function checkSizes(files){
         }
     };
     xhr.send();
-
-    // return fileBytes;
   }
-
 }
 
 // check the video loading progress and update the progress bar
@@ -315,7 +317,7 @@ var preLoader = function(){
   if (randomOrder){ shuffle(vidList); }
 
   // check file sizes for progress bar
-  checkSizes(vidList);
+  var fileBytes = checkSizes(vidList);
 
   // start loading the videos  
   for (var i = 0; i < vidList.length; i++) {
@@ -330,7 +332,7 @@ var preLoader = function(){
   }
 
   // progress bar
-  checkLoad();
+  checkLoad(fileBytes);
 }
 
 $(document).ready(preLoader());
