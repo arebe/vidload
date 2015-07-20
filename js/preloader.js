@@ -2,55 +2,55 @@
 //==== Playlist: enter the file names here: ==========//
 
 var allVideos = {
-  "videos": 
+  "videos": [
      {"title": "video 1",
       "h264": "videos/01-16s_h264.mp4",
       "webm": "videos/01-16s_h264.webm",
-      "ogv": "videos/01-16s_h264.ogv", 
+      "ogg": "videos/01-16s_h264.ogv", 
       "doubleplay": "true",
-     }
+     },
+     {"title": "video 2",
+      "h264": "videos/02-18s_h264.mp4",
+      "webm": "videos/02-18s_h264.webm",  
+      "ogg": "videos/02-18s_h264.ogv",  
+      "doubleplay": "true",
+     },
+     {"title": "video 3",
+      "h264": "videos/03-13s_h264.mp4",
+      "webm": "videos/03-13s_h264.webm",
+      "ogg": "videos/03-13s_h264.ogv", 
+      "doubleplay": "true",
+     },
+     {"title": "video 4",
+      "h264": "videos/04-13s_h264.mp4",
+      "webm": "videos/04-13s_h264.webm",
+      "ogg": "videos/04-13s_h264.ogv", 
+      "doubleplay": "true",
+     },
+     {"title": "video 5",
+      "h264": "videos/05-22s_h264.mp4",
+      "webm": "videos/05-22s_h264.webm",
+      "ogg": "videos/05-22s_h264.ogv",
+      "doubleplay": "true",
+     },
+     {"title": "video 6",
+      "h264": "videos/magenta_test.mp4",
+      "doubleplay": "true",
+     },
+     {"title": "video 7",
+      "h264": "videos/magenta_test2.mp4",
+      "doubleplay": "true",
+     },
   ]
 };
 
-var myVidsH264=[
-   "videos/01-16s_h264.mp4", 
-   "videos/02-18s_h264.mp4",	
-   "videos/03-13s_h264.mp4",
-   "videos/04-13s_h264.mp4",
-   "videos/05-22s_h264.mp4",
-   "videos/magenta_test.mp4",
-   "videos/magenta_test2.mp4",
-]
 
-// var myVidsH264=[
-//    "videos/01-16s_h264.mov", 
-//    "videos/02-18s_h264.mov",  
-//    "videos/03-13s_h264.mov",
-//    "videos/04-13s_h264.mov",
-//    "videos/05-22s_h264.mov",
-// ]
-
-var myVidsWebm=[
-   "videos/01-16s_h264.webm", 
-   "videos/02-18s_h264.webm",	
-   "videos/03-13s_h264.webm",
-   "videos/04-13s_h264.webm",
-   "videos/05-22s_h264.webm",
-]
-
-var myVidsOgg=[
-   "videos/01-16s_h264.ogv", 
-   "videos/02-18s_h264.ogv",  
-   "videos/03-13s_h264.ogv",
-   "videos/04-13s_h264.ogv",
-   "videos/05-22s_h264.ogv",
-]
 
 var randomOrder = true; // done - set to false if playlist order is non-random
 
-///TBD
+//== Playing behavior 
 var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like a UI feature
-var doubleplay = false; // play each video twice
+
 
 //=== UI control toggles - set to false to remove from UI 
 var playOn = true;
@@ -129,9 +129,9 @@ function checkLoad(){
   var percentLoaded = 0;
   var timeoutID = setInterval(function(){
     console.log("videlements.length: "+vidElements.length);
-    console.log("myVidsH264.length: "+myVidsH264.length);
+    console.log("allVideos.videos.length: "+allVideos.videos.length);
     if(percentLoaded < 100){
-      percentLoaded = (vidElements.length+1) / (myVidsH264.length+1) * 100;
+      percentLoaded = (vidElements.length+1) / (allVideos.videos.length+1) * 100;
       $('progress').val(percentLoaded);
     }
     else{
@@ -292,10 +292,28 @@ var preLoader = function(){
   var vidType ;
 
   // check browser compatibilty and initiate fall-backs
-  if (Modernizr.video.h264){ vidList = myVidsH264; vidType = "video/mp4";}
-  else if (Modernizr.video.webm){  vidList = myVidsWebm; vidType = "video/webm";}
-  else if(Modernizr.video.ogg){ vidList = myVidsOgg; vidType = "video/ogg";}
+  if (Modernizr.video.h264){ vidType = "video/mp4";}
+  else if (Modernizr.video.webm){ vidType = "video/webm";}
+  else if(Modernizr.video.ogg){ vidType = "video/ogg";}
   else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
+
+  // make a list of video files, basd on file type
+  for (var i = 0; i < allVideos.videos.length; i++){
+    switch(vidType){
+      case "video/mp4":
+         vidList.push(allVideos.videos[i].h264);
+         break;
+      case "video/webm":
+         vidList.push(allVideos.videos[i].webm);
+         break;      
+      case "video/ogg":
+         vidList.push(allVideos.videos[i].ogg);
+         break;
+      default:
+         console.log("no html5 video support :( ");
+    }
+    
+  }
 
   // randomize the videos, if necessary
   if (randomOrder){ shuffle(vidList); }
