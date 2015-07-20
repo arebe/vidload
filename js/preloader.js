@@ -188,12 +188,8 @@ var player = function(){
   showVjs("video"+vindex);
 
   // UI controls
-  // if(playOn){ playUI(); }
   if(skipOn){ skipUI(); }
-  // if(rwOn){ rwUI(-0.1); }
-  // if(ffOn){ ffUI(); }
-  // if(volumeOn){ volUI(); }
-
+ 
 
 
   function skipUI(){
