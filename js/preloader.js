@@ -1,6 +1,17 @@
 //====================================================//
 //==== Playlist: enter the file names here: ==========//
 
+var allVideos = {
+  "videos": 
+     {"title": "video 1",
+      "h264": "videos/01-16s_h264.mp4",
+      "webm": "videos/01-16s_h264.webm",
+      "ogv": "videos/01-16s_h264.ogv", 
+      "doubleplay": "true",
+     }
+  ]
+};
+
 var myVidsH264=[
    "videos/01-16s_h264.mp4", 
    "videos/02-18s_h264.mp4",	
@@ -238,8 +249,10 @@ var player = function(){
     // theVideo = document.getElementById(vidElement);
     var thePlayer = videojs(vidElement, options, function(){
       console.log("initializing video js player for "+vidElement);
+      this.addClass("vjs-big-play-centered");
     });
     if(rwOn){
+      ///// TO BE DONE FULLY!!
        var rwBtn = thePlayer.controlBar.addChild('button',{
         text: "REWIND",
 
