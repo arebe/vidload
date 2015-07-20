@@ -95,7 +95,7 @@ function shuffle(array) {
   return array;
 }
 
-// check the file sizes n the server 
+// check the file sizes on the server 
 function checkSizes(files){
   var fileBytes;
   // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
