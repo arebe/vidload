@@ -156,6 +156,7 @@ var player = function(){
     // add options for controls based on toggled options or whatever
 
     addVjs("video"+i, options);
+
   }
 
   // video elements
@@ -163,7 +164,7 @@ var player = function(){
   var videoPlayer, theVideo;
 
   // buttons - so they can access each other
-  var prevBtn, nextBtn, playBtn, ffBtn, rwBtn;
+  var prevBtn, nextBtn, playBtn;
 
   // player state
   var playing, speed, ffing, rwing, rwinterval;
@@ -234,10 +235,17 @@ var player = function(){
     }
 
   function addVjs(vidElement, options){
-    theVideo = document.getElementById(vidElement);
-    videojs(vidElement, options, function(){
+    // theVideo = document.getElementById(vidElement);
+    var thePlayer = videojs(vidElement, options, function(){
       console.log("initializing video js player for "+vidElement);
-    })
+    });
+    if(rwOn){
+       var rwBtn = thePlayer.controlBar.addChild('button',{
+        text: "REWIND",
+
+       });
+       rwBtn.addClass("btn_rw");
+    }
   }
 
   function showVjs(vidElement){
