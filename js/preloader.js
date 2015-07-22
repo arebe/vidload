@@ -95,7 +95,7 @@ function shuffle(array) {
   return array;
 }
 
-// check the file sizes on the server 
+// check the file sizes on the server -- add to JSON?????
 function checkSizes(files){
   var fileBytes=0;
   // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
@@ -145,6 +145,16 @@ function checkLoad(){
     }
   }, 400);}
 
+function checkLoad2(vindex){
+  var thisVideo = document.getElementById("#video"+vindex);
+  var r = thisVideo.buffered;
+  var total = thisVideo.duration;
+  var start = r.start(0);
+  var end = r.end(0);
+  $("progress"+i).progressbar({value: (end/total)*100})
+
+}
+
 // initialize video player and its UI 
 var player = function(){
   // add videojs player to each video
@@ -169,6 +179,7 @@ var player = function(){
     // add options for controls based on toggled options or whatever
 
     addVjs("video"+i, options);
+    $("#video"+i).bind('progress', checkLoad2(i));
 
   }
 
@@ -219,7 +230,7 @@ var player = function(){
           showVjs("video"+vindex);
           nextBtn.disabled = false;
         }
-      })
+      });
       // iterate through video playlist forwards
       nextBtn.addEventListener("click", function(){
         if(vindex == vidElements.length-1){
@@ -240,7 +251,7 @@ var player = function(){
           prevBtn.disabled = false;
         }
 
-      })
+      });
     }
 
   function addVjs(vidElement, options){
@@ -280,7 +291,7 @@ var player = function(){
 
 
 
-} // end player function
+}; // end player function
 
 
 
@@ -323,8 +334,14 @@ var preLoader = function(){
   for (var i = 0; i < vidList.length; i++) {
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
+    // add a div for each video - to contain video element + progress bar
+    $("#videos").append('<div id="vid'+i+'">');
     // add video element for each video
     $("#videos").append('<video id="video'+i+'"  > Your browser does not support the video tag. </video>');
+    // add progress bar
+    $("#videos").append('<progress id="progress'+i+'" value="2" max="100"></progress>');
+    // end video div
+    $("#videos").append('</div>');
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -333,7 +350,7 @@ var preLoader = function(){
 
   // progress bar
   checkLoad(fileBytes);
-}
+};
 
 $(document).ready(preLoader());
 
@@ -359,10 +376,10 @@ function loadVid(vidFile, vidType, i){
       $(video).on('play', function(){
         var v = parseInt($('input[name="'+vidFile+'"]').val());
         $('input[name="'+vidFile+'"]').val(++v);
-      })
+      });
       vidElements.push(video);
     }
-  }
+  };
   xhr.send();
 
 }
