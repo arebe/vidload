@@ -3,45 +3,45 @@
 
 var allVideos = {
   "videos": [
-     {"title": "video 1",
-      "h264": "videos/01-16s_h264.mp4",
-      "webm": "videos/01-16s_h264.webm",
-      "ogg": "videos/01-16s_h264.ogv", 
-      "doubleplay": "true",
-     },
-     {"title": "video 2",
-      "h264": "videos/02-18s_h264.mp4",
-      "webm": "videos/02-18s_h264.webm",  
-      "ogg": "videos/02-18s_h264.ogv",  
-      "doubleplay": "true",
-     },
-     {"title": "video 3",
-      "h264": "videos/03-13s_h264.mp4",
-      "webm": "videos/03-13s_h264.webm",
-      "ogg": "videos/03-13s_h264.ogv", 
-      "doubleplay": "true",
-     },
-     {"title": "video 4",
-      "h264": "videos/04-13s_h264.mp4",
-      "webm": "videos/04-13s_h264.webm",
-      "ogg": "videos/04-13s_h264.ogv", 
-      "doubleplay": "true",
-     },
-     {"title": "video 5",
-      "h264": "videos/05-22s_h264.mp4",
-      "webm": "videos/05-22s_h264.webm",
-      "ogg": "videos/05-22s_h264.ogv",
-      "doubleplay": "true",
-     },
-     {"title": "video 6",
-      "h264": "videos/magenta_test.mp4",
-      "doubleplay": "true",
-     },
-     {"title": "video 7",
-      "h264": "videos/magenta_test2.mp4",
-      "doubleplay": "true",
-     },
-  ]
+  {"title": "video 1",
+  "h264": "videos/01-16s_h264.mp4",
+  "webm": "videos/01-16s_h264.webm",
+  "ogg": "videos/01-16s_h264.ogv", 
+  "doubleplay": "true",
+},
+{"title": "video 2",
+"h264": "videos/02-18s_h264.mp4",
+"webm": "videos/02-18s_h264.webm",  
+"ogg": "videos/02-18s_h264.ogv",  
+"doubleplay": "true",
+},
+{"title": "video 3",
+"h264": "videos/03-13s_h264.mp4",
+"webm": "videos/03-13s_h264.webm",
+"ogg": "videos/03-13s_h264.ogv", 
+"doubleplay": "true",
+},
+{"title": "video 4",
+"h264": "videos/04-13s_h264.mp4",
+"webm": "videos/04-13s_h264.webm",
+"ogg": "videos/04-13s_h264.ogv", 
+"doubleplay": "true",
+},
+{"title": "video 5",
+"h264": "videos/05-22s_h264.mp4",
+"webm": "videos/05-22s_h264.webm",
+"ogg": "videos/05-22s_h264.ogv",
+"doubleplay": "true",
+},
+{"title": "video 6",
+"h264": "videos/magenta_test.mp4",
+"doubleplay": "true",
+},
+{"title": "video 7",
+"h264": "videos/magenta_test2.mp4",
+"doubleplay": "true",
+},
+]
 };
 
 
@@ -69,6 +69,8 @@ var fullscOn = true;
 
 // html5 video elements
 var vidElements = [];
+// display index
+var vindex = 0;
 
 console.log("modernizr video h264 support? " + Modernizr.video.h264);
 console.log("modernizr video webm support? " + Modernizr.video.webm);
@@ -96,35 +98,35 @@ function shuffle(array) {
 }
 
 // check the file sizes on the server -- add to JSON?????
-function checkSizes(files){
-  var fileBytes=0;
-  // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
-  for (var i = 0; i < files.length; i++){
-    get_filesize(files[i], function(filesize){
-      console.log("file of size: "+filesize);
-      fileBytes += parseInt(filesize);
-    });
+// function checkSizes(files){
+//   var fileBytes=0;
+//   // from: http://stackoverflow.com/questions/17416274/ajax-get-size-of-file-before-downloading
+//   for (var i = 0; i < files.length; i++){
+//     get_filesize(files[i], function(filesize){
+//       console.log("file of size: "+filesize);
+//       fileBytes += parseInt(filesize);
+//     });
 
-    if (i == files.length-1){
-      console.log("total fileBytes: "+fileBytes);
-      return fileBytes;
-    }
-    
-  }
+//     if (i == files.length-1){
+//       console.log("total fileBytes: "+fileBytes);
+//       return fileBytes;
+//     }
+
+//   }
 
 
-  function get_filesize(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("HEAD", url, true); // Notice "HEAD" instead of "GET",
-                                 //  to get only the header
-    xhr.onreadystatechange = function() {
-        if (this.readyState == this.DONE) {
-            callback(parseInt(xhr.getResponseHeader("Content-Length")));
-        }
-    };
-    xhr.send();
-  }
-}
+//   function get_filesize(url, callback) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open("HEAD", url, true); // Notice "HEAD" instead of "GET",
+//                                  //  to get only the header
+//     xhr.onreadystatechange = function() {
+//         if (this.readyState == this.DONE) {
+//             callback(parseInt(xhr.getResponseHeader("Content-Length")));
+//         }
+//     };
+//     xhr.send();
+//   }
+// }
 
 // check the video loading progress and update the progress bar
 function checkLoad(){ 
@@ -132,59 +134,48 @@ function checkLoad(){
   var timeoutID = setInterval(function(){
     console.log("videlements.length: "+vidElements.length);
     console.log("allVideos.videos.length: "+allVideos.videos.length);
-    if(percentLoaded < 100){
-      percentLoaded = (vidElements.length+1) / (allVideos.videos.length+1) * 100;
-      $('progress').val(percentLoaded);
+    if(vidElements.length == 1){
+      // player();
     }
-    else{
-      console.log("percentLoaded: "+percentLoaded);
-      clearTimeout(timeoutID);
-      $('progress').val(percentLoaded);
-      document.getElementById("loading").style.display="none";
-      player();
-    }
+    // if(percentLoaded < 100){
+    //   percentLoaded = (vidElements.length+1) / (allVideos.videos.length+1) * 100;
+    //   $('progress').val(percentLoaded);
+    // }
+    // else{
+    //   console.log("percentLoaded: "+percentLoaded);
+    //   clearTimeout(timeoutID);
+    //   $('progress').val(percentLoaded);
+    //   document.getElementById("loading").style.display="none";
+    //   player();
+    // }
   }, 400);}
 
-function checkLoad2(vindex){
-  var thisVideo = document.getElementById("#video"+vindex);
-  var r = thisVideo.buffered;
-  var total = thisVideo.duration;
-  var start = r.start(0);
-  var end = r.end(0);
-  $("progress"+i).progressbar({value: (end/total)*100})
 
-}
 
 // initialize video player and its UI 
-var player = function(){
+var vjsPlayer = function(i){
   // add videojs player to each video
-  for (var i = 0; i < vidElements.length; i++){
-    var options = {
-      "width": $("#video"+i).prop('videoWidth'),
-      "height": $("#video"+i).prop('videoHeight'),
-      controlBar: {
-        playToggle: (playOn ? true : false),
-        fullscreenToggle: (fullscOn ? true : false),
-        currentTimeDisplay: (durationOn ? true : false),
-        durationDisplay: (durationOn ? true : false),
-        remainingTimeDisplay: (durationOn ? true : false),
-        timeDivider: (durationOn ? true : false),
-        progressControl: {
-          seekBar: (seekOn ? true : false),
-        },
-        volumeControl: (volumeOn ? true : false),
-        muteToggle: (muteOn ? true : false),
+  var options = {
+    "width": $("#video"+i).prop('videoWidth'),
+    "height": $("#video"+i).prop('videoHeight'),
+    controlBar: {
+      playToggle: (playOn ? true : false),
+      fullscreenToggle: (fullscOn ? true : false),
+      currentTimeDisplay: (durationOn ? true : false),
+      durationDisplay: (durationOn ? true : false),
+      remainingTimeDisplay: (durationOn ? true : false),
+      timeDivider: (durationOn ? true : false),
+      progressControl: {
+        seekBar: (seekOn ? true : false),
       },
-    };
-    // add options for controls based on toggled options or whatever
+      volumeControl: (volumeOn ? true : false),
+      muteToggle: (muteOn ? true : false),
+    },
+  };
 
-    addVjs("video"+i, options);
-    $("#video"+i).bind('progress', checkLoad2(i));
-
-  }
+  addVjs("video"+i, options);
 
   // video elements
-  var vindex = 0;
   var videoPlayer, theVideo;
 
   // buttons - so they can access each other
@@ -197,64 +188,68 @@ var player = function(){
   theVideo = document.getElementById("video"+vindex);
 
   videoPlayer.style.display="table";
-  theVideo.style.display="block";
+  if(vindex == i){
+      theVideo.style.display="block";
+  }
+
   showVjs("video"+vindex);
 
-  // UI controls
-  if(skipOn){ skipUI(); }
- 
 
 
-  function skipUI(){
-      $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
-      $("#video_player").append('<button type="button" class="btn_skip" id="btn_next" > &gt; &gt; </button>');
+}; // end vjsplayer function
 
 
-      prevBtn = document.getElementById("btn_prev");
-      nextBtn = document.getElementById("btn_next");
 
-      // iterate through video playlist backwards
-      prevBtn.addEventListener("click", function(){
-        if(vindex == 0){
-          prevBtn.disabled = true;
-        }
-        else if (vindex == 1) {
-          hideVjs("video"+vindex);
-          vindex--;
-          showVjs("video"+vindex);
-          prevBtn.disabled = true;
-        }
-        else{
-          hideVjs("video"+vindex);        
-          vindex--;
-          showVjs("video"+vindex);
-          nextBtn.disabled = false;
-        }
-      });
-      // iterate through video playlist forwards
-      nextBtn.addEventListener("click", function(){
-        if(vindex == vidElements.length-1){
-          nextBtn.disabled = true;
-        }
-        else if(vindex == vidElements.length-2){
-          hideVjs("video"+vindex);
-          vindex++;
-          showVjs("video"+vindex);
-          // theVideo.pause();
-          prevBtn.disabled = false;
-          nextBtn.disabled = true;
-        }
-        else{
-          hideVjs("video"+vindex);
-          vindex++;
-          showVjs("video"+vindex);
-          prevBtn.disabled = false;
-        }
+function skipUI(){
+  $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
+  $("#video_player").append('<button type="button" class="btn_skip" id="btn_next" > &gt; &gt; </button>');
 
-      });
+
+  prevBtn = document.getElementById("btn_prev");
+  nextBtn = document.getElementById("btn_next");
+
+  // iterate through video playlist backwards
+  prevBtn.addEventListener("click", function(){
+    if(vindex == 0){
+      prevBtn.disabled = true;
+    }
+    else if (vindex == 1) {
+      hideVjs("video"+vindex);
+      vindex--;
+      showVjs("video"+vindex);
+      prevBtn.disabled = true;
+    }
+    else{
+      hideVjs("video"+vindex);        
+      vindex--;
+      showVjs("video"+vindex);
+      nextBtn.disabled = false;
+    }
+  });
+  // iterate through video playlist forwards
+  nextBtn.addEventListener("click", function(){
+    if(vindex == vidElements.length-1 ){
+      nextBtn.disabled = true;
+    }
+    else if(vindex == vidElements.length-2){
+      hideVjs("video"+vindex);
+      vindex++;
+      showVjs("video"+vindex);
+      prevBtn.disabled = false;
+      nextBtn.disabled = true;
+    }
+    else{
+      hideVjs("video"+vindex);
+      vindex++;
+      showVjs("video"+vindex);
+      prevBtn.disabled = false;
     }
 
-  function addVjs(vidElement, options){
+  });
+
+}; // end skipUI function
+
+function addVjs(vidElement, options){
     // theVideo = document.getElementById(vidElement);
     var thePlayer = videojs(vidElement, options, function(){
       console.log("initializing video js player for "+vidElement);
@@ -262,11 +257,11 @@ var player = function(){
     });
     if(rwOn){
       ///// TO BE DONE FULLY!!
-       var rwBtn = thePlayer.controlBar.addChild('button',{
+      var rwBtn = thePlayer.controlBar.addChild('button',{
         text: "REWIND",
 
-       });
-       rwBtn.addClass("btn_rw");
+      });
+      rwBtn.addClass("btn_rw");
     }
   }
 
@@ -291,7 +286,6 @@ var player = function(){
 
 
 
-}; // end player function
 
 
 
@@ -310,16 +304,16 @@ var preLoader = function(){
   for (var i = 0; i < allVideos.videos.length; i++){
     switch(vidType){
       case "video/mp4":
-         vidList.push(allVideos.videos[i].h264);
-         break;
+      vidList.push(allVideos.videos[i].h264);
+      break;
       case "video/webm":
-         vidList.push(allVideos.videos[i].webm);
-         break;      
+      vidList.push(allVideos.videos[i].webm);
+      break;      
       case "video/ogg":
-         vidList.push(allVideos.videos[i].ogg);
-         break;
+      vidList.push(allVideos.videos[i].ogg);
+      break;
       default:
-         console.log("no html5 video support :( ");
+      console.log("no html5 video support :( ");
     }
     
   }
@@ -328,20 +322,20 @@ var preLoader = function(){
   if (randomOrder){ shuffle(vidList); }
 
   // check file sizes for progress bar
-  var fileBytes = checkSizes(vidList);
+  // var fileBytes = checkSizes(vidList);
 
   // start loading the videos  
   for (var i = 0; i < vidList.length; i++) {
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add a div for each video - to contain video element + progress bar
-    $("#videos").append('<div id="vid'+i+'">');
+    // $("#videos").append('<div id="vid'+i+'">');
     // add video element for each video
     $("#videos").append('<video id="video'+i+'"  > Your browser does not support the video tag. </video>');
     // add progress bar
     $("#videos").append('<progress id="progress'+i+'" value="2" max="100"></progress>');
     // end video div
-    $("#videos").append('</div>');
+    // $("#videos").append('</div>');
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -349,7 +343,8 @@ var preLoader = function(){
   }
 
   // progress bar
-  checkLoad(fileBytes);
+  // UI controls
+  if(skipOn){ skipUI(); }
 };
 
 $(document).ready(preLoader());
@@ -359,6 +354,17 @@ $(document).ready(preLoader());
 function loadVid(vidFile, vidType, i){
 	var elementID = "video"+i;
   var xhr = new XMLHttpRequest();
+  xhr.onprogress = function(e){
+    if(e.lengthComputable){
+      var perctload = (e.loaded / e.total) *100;
+      $("#progress"+i).progressbar({ value: perctload });
+      console.log("computable - "+perctload, vidFile);
+    }
+    else {
+      console.log("unable to compute progress for ",vidFile);
+    }
+  };
+  xhr.addEventListener("load", vjsPlayer(i), false);
   xhr.open('GET', vidFile, true);
   xhr.responseType = 'blob';
   xhr.onload = function(e) {
@@ -378,15 +384,32 @@ function loadVid(vidFile, vidType, i){
         $('input[name="'+vidFile+'"]').val(++v);
       });
       vidElements.push(video);
+      vjsPlayer(i);
     }
   };
+
+  function updateProgress(e){
+    console.log("ANYONE");
+    if(e.lengthComputable){
+      var perctload = e.loaded / e.total;
+      $("#progress"+i).progressbar({ value: perctload });
+      
+      console.log("computable - 100 ",vidFile);
+      
+
+    }
+    else {
+      console.log("unable to compute progress for ",vidFile);
+    }
+  }
+
   xhr.send();
 
 }
 
 
 
- 
+
 
 
 
