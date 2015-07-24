@@ -21,41 +21,38 @@ var allVideos = {
 "ogg": "videos/03-13s_h264.ogv", 
 "doubleplay": "true",
 },
-// {"title": "video 4",
-// "h264": "videos/04-13s_h264.mp4",
-// "webm": "videos/04-13s_h264.webm",
-// "ogg": "videos/04-13s_h264.ogv", 
-// "doubleplay": "true",
-// },
-// {"title": "video 5",
-// "h264": "videos/05-22s_h264.mp4",
-// "webm": "videos/05-22s_h264.webm",
-// "ogg": "videos/05-22s_h264.ogv",
-// "doubleplay": "true",
-// },
-// {"title": "video 6",
-// "h264": "videos/magenta_test.mp4",
-// "doubleplay": "true",
-// },
-// {"title": "video 7",
-// "h264": "videos/magenta_test2.mp4",
-// "doubleplay": "true",
-// },
+{"title": "video 4",
+"h264": "videos/04-13s_h264.mp4",
+"webm": "videos/04-13s_h264.webm",
+"ogg": "videos/04-13s_h264.ogv", 
+"doubleplay": "true",
+},
+{"title": "video 5",
+"h264": "videos/05-22s_h264.mp4",
+"webm": "videos/05-22s_h264.webm",
+"ogg": "videos/05-22s_h264.ogv",
+"doubleplay": "true",
+},
+{"title": "video 6",
+"h264": "videos/magenta_test.mp4",
+"doubleplay": "true",
+},
+{"title": "video 7",
+"h264": "videos/magenta_test2.mp4",
+"doubleplay": "true",
+},
 ]
 };
-
 
 
 var randomOrder = true; // done - set to false if playlist order is non-random
 
 //== Playing behavior 
-var autoplayOn = false;  /// what is behavior of autoplay? this doesnt seem like a UI feature
+var autoplayOn = false;  /// todo -autoplay video upon clicking "next"
 
 
 //=== UI control toggles - set to false to remove from UI 
 var playOn = true;
-var ffOn = true; // uhh
-var rwOn = true; // wat
 var skipOn = true; 
 var volumeOn =  true;
 var muteOn = true;
@@ -97,7 +94,7 @@ function shuffle(array) {
   return array;
 }
 
-// initialize video player and its UI 
+// initialize videojs player and its UI 
 var vjsPlayer = function(w, h, i){
   // add videojs player to each video
   var options = {
@@ -119,27 +116,24 @@ var vjsPlayer = function(w, h, i){
   };
 
   addVjs("video"+i, options);
+  var thisVideo = document.getElementById("video"+vindex);
 
-  
-
-
-  // theVideo = document.getElementById("video"+vindex);
-
-
-  // if(vindex == i){
-  //   theVideo.style.display="block";
-  //   showVjs("video"+i);
-  // }
-  // else{
-  //   theVideo.style.display="none";
-  //   hideVjs("video"+i);
-  // }
+  if(i == 0){
+    console.log("the I is: "+i);
+    thisVideo.style.display="block";
+    showVjs("video"+i, i);
+  }
+  else{
+    thisVideo.style.display="none";
+    hideVjs("video"+i, i);
+    showVjs("video"+vindex, vindex);
+  }
 
 }; // end vjsplayer function
 
-/// some globals -- refactor this ---//
+/// some globals -- todo: refactor this ---//
 // video element
-  var theVideo;
+var theVideo;
 // buttons - so they can access each other
 var prevBtn, nextBtn;
 // player state
@@ -164,15 +158,15 @@ function skipUI(){
       prevBtn.disabled = true;
     }
     else if (vindex == 1) {
-      hideVjs("video"+vindex);
+      hideVjs("video"+vindex, vindex);
       vindex--;
-      showVjs("video"+vindex);
+      showVjs("video"+vindex, vindex);
       prevBtn.disabled = true;
     }
     else{
-      hideVjs("video"+vindex);        
+      hideVjs("video"+vindex, vindex);        
       vindex--;
-      showVjs("video"+vindex);
+      showVjs("video"+vindex, vindex);
       nextBtn.disabled = false;
     }
   });
@@ -185,14 +179,14 @@ function skipUI(){
     else if(vindex == vidElements.length-2){
       hideVjs("video"+vindex);
       vindex++;
-      showVjs("video"+vindex);
+      showVjs("video"+vindex, vindex);
       prevBtn.disabled = false;
       nextBtn.disabled = true;
     }
     else{
       hideVjs("video"+vindex);
       vindex++;
-      showVjs("video"+vindex);
+      showVjs("video"+vindex, vindex);
       prevBtn.disabled = false;
     }
 
@@ -204,27 +198,22 @@ function addVjs(vidElement, options){
   var thePlayer = videojs(vidElement, options, function(){
     console.log("initializing video js player for "+vidElement);
     this.addClass("vjs-big-play-centered");
+    // document.getElementById(vidElement).style.display="none";
   });
-  if(rwOn){
-      ///// TO BE DONE FULLY!!
-      var rwBtn = thePlayer.controlBar.addChild('button',{
-        text: "REWIND",
+}
 
-      });
-      rwBtn.addClass("btn_rw");
-    }
-  }
-
-  function showVjs(vidElement){
-    theVideo = document.getElementById(vidElement+"_html5_api");
-    theVideo.style.display="inline block";
-    theVjs = document.getElementById(vidElement);
+  function showVjs(vidElement, i){
+    $("#vid"+vindex).show();
+    var newVideo = document.getElementById(vidElement+"_html5_api");
+    newVideo.style.display="inline block";
+    var theVjs = document.getElementById(vidElement);
     theVjs.style.display="block";
     $("#"+vidElement).addClass("video-js vjs-default-skin");
     console.log("showing video js player for "+vidElement);
   }
 
-  function hideVjs(vidElement){
+  function hideVjs(vidElement, i){
+    $("#vid"+i).hide();
     var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(oldVideo).pause();
@@ -271,11 +260,8 @@ var preLoader = function(){
   for (var i = 0; i < vidList.length; i++) {
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
-    // add video element for each video
-    $("#videos").append('<video id="video'+i+'"  > Your browser does not support the video tag. </video>');
-    // add progress bar
-    $("#videos").append('<progress id="progress'+i+'" value="2" max="100"></progress>');
-    if(i != 0 ){ $("#progress"+i).hide(); }
+    // add video & progress element for each video
+    $("#videos").append('<div id="vid'+i+'"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -285,8 +271,7 @@ var preLoader = function(){
   // player element w progress bar
   var videoPlayer = document.getElementById("video_player"); 
   videoPlayer.style.display="table";
-  // UI controls
-  // if(skipOn){ skipUI(); }
+
 };
 
 $(document).ready(preLoader());
@@ -314,23 +299,17 @@ function loadVid(vidFile, vidType, i){
   xhr.onload = function(e) {
 
     if (this.status == 200) {
-      var ltv = loadThisVid(this.response);      
+      var ltv = loadThisVid(this.response, i);      
     }
   };
 
-  function loadThisVid(response){
+  function loadThisVid(response, i){
     var myBlob = response;
     var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
-      if (i != 0){ video.style.display="none"; }
-      else{
-        video.style.display="block";
-        if(skipOn){ skipUI(); }
-      }
+      
       console.log("Loading video "+vidFile+" into element video"+i);
-      console.log(elementID);
-      console.log("video: ", video);
       video.src = vid;
       video.type=vidType ;
       video.controls=true;
@@ -340,13 +319,12 @@ function loadVid(vidFile, vidType, i){
         $('input[name="'+vidFile+'"]').val(++v);
       });
       vidElements.push(video);
-      console.log("elementID: ", elementID)
-      console.log("video width: "+video.videoWidth);
       video.addEventListener( "loadedmetadata", function (e) {
         var width = this.videoWidth,
         height = this.videoHeight;
-        console.log("width listener: ", width);
         vjsPlayer(width, height, i);
+        // initialize skip buttons if its the first video
+        if(i === 0 && skipOn){ skipUI(); }
       }, false );
     }
 
