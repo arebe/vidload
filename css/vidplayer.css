@@ -3,9 +3,16 @@
 	background-image:url('../images/zwartevilt.png');
 	background-repeat: repeat;
 	display: none;
-	line-height: 0; 
-	font-size: 0; 
 	margin: 0 auto;
+}
+
+progress {
+    -webkit-appearance: progress-bar;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 1em;
+    width: 10em;
+    vertical-align: -0.2em;
 }
 
 /*---- transport control buttons -----*/

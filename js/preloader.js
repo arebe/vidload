@@ -121,8 +121,8 @@ var vjsPlayer = function(i){
   // $("#progress"+i).hide();
   addVjs("video"+i, options);
 
-  // video elements
-  var videoPlayer, theVideo;
+  // video element
+  var theVideo;
 
   // buttons - so they can access each other
   var prevBtn, nextBtn, playBtn;
@@ -130,10 +130,10 @@ var vjsPlayer = function(i){
   // player state
   var playing, speed, ffing, rwing, rwinterval;
 
-  videoPlayer = document.getElementById("video_player"); 
+
   theVideo = document.getElementById("video"+vindex);
 
-  videoPlayer.style.display="table";
+
   if(vindex == i){
       theVideo.style.display="block";
       showVjs("video"+i);
@@ -277,6 +277,9 @@ var preLoader = function(){
     
   }
 
+  // player element w progress bar
+  var videoPlayer = document.getElementById("video_player"); 
+  videoPlayer.style.display="table";
   // UI controls
   if(skipOn){ skipUI(); }
 };
