@@ -9,18 +9,18 @@ var allVideos = {
   "ogg": "videos/01-16s_h264.ogv", 
   "doubleplay": "true",
 },
-// {"title": "video 2",
-// "h264": "videos/02-18s_h264.mp4",
-// "webm": "videos/02-18s_h264.webm",  
-// "ogg": "videos/02-18s_h264.ogv",  
-// "doubleplay": "true",
-// },
-// {"title": "video 3",
-// "h264": "videos/03-13s_h264.mp4",
-// "webm": "videos/03-13s_h264.webm",
-// "ogg": "videos/03-13s_h264.ogv", 
-// "doubleplay": "true",
-// },
+{"title": "video 2",
+"h264": "videos/02-18s_h264.mp4",
+"webm": "videos/02-18s_h264.webm",  
+"ogg": "videos/02-18s_h264.ogv",  
+"doubleplay": "true",
+},
+{"title": "video 3",
+"h264": "videos/03-13s_h264.mp4",
+"webm": "videos/03-13s_h264.webm",
+"ogg": "videos/03-13s_h264.ogv", 
+"doubleplay": "true",
+},
 // {"title": "video 4",
 // "h264": "videos/04-13s_h264.mp4",
 // "webm": "videos/04-13s_h264.webm",
@@ -118,36 +118,38 @@ var vjsPlayer = function(w, h, i){
     },
   };
 
-  // $("#progress"+i).hide();
   addVjs("video"+i, options);
 
-  // video element
-  var theVideo;
-
-  // buttons - so they can access each other
-  var prevBtn, nextBtn, playBtn;
-
-  // player state
-  var playing, speed, ffing, rwing, rwinterval;
+  
 
 
-  theVideo = document.getElementById("video"+vindex);
+  // theVideo = document.getElementById("video"+vindex);
 
 
-  if(vindex == i){
-    theVideo.style.display="block";
-    showVjs("video"+i);
-  }
-  else{
-    theVideo.style.display="none";
-    hideVjs("video"+i);
-  }
+  // if(vindex == i){
+  //   theVideo.style.display="block";
+  //   showVjs("video"+i);
+  // }
+  // else{
+  //   theVideo.style.display="none";
+  //   hideVjs("video"+i);
+  // }
 
 }; // end vjsplayer function
 
-
+/// some globals -- refactor this ---//
+// video element
+  var theVideo;
+// buttons - so they can access each other
+var prevBtn, nextBtn;
+// player state
+var playing, speed, ffing, rwing, rwinterval;
 
 function skipUI(){
+  
+
+  var theVideo = document.getElementById("video"+vindex);
+
   $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
   $("#video_player").append('<button type="button" class="btn_skip" id="btn_next" > &gt; &gt; </button>');
 
@@ -157,6 +159,7 @@ function skipUI(){
 
   // iterate through video playlist backwards
   prevBtn.addEventListener("click", function(){
+    console.log("prev click, vindex: ", vindex);
     if(vindex == 0){
       prevBtn.disabled = true;
     }
@@ -175,6 +178,7 @@ function skipUI(){
   });
   // iterate through video playlist forwards
   nextBtn.addEventListener("click", function(){
+    console.log("next click, vindex: ", vindex);
     if(vindex == vidElements.length-1 ){
       nextBtn.disabled = true;
     }
@@ -271,6 +275,7 @@ var preLoader = function(){
     $("#videos").append('<video id="video'+i+'"  > Your browser does not support the video tag. </video>');
     // add progress bar
     $("#videos").append('<progress id="progress'+i+'" value="2" max="100"></progress>');
+    if(i != 0 ){ $("#progress"+i).hide(); }
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -281,7 +286,7 @@ var preLoader = function(){
   var videoPlayer = document.getElementById("video_player"); 
   videoPlayer.style.display="table";
   // UI controls
-  if(skipOn){ skipUI(); }
+  // if(skipOn){ skipUI(); }
 };
 
 $(document).ready(preLoader());
@@ -296,6 +301,9 @@ function loadVid(vidFile, vidType, i){
       var perctload = (e.loaded / e.total) *100;
       $("#progress"+i).val(perctload);
       console.log("computable - "+perctload, vidFile);
+      if(perctload == 100){
+        $("#progress"+i).hide();
+      }
     }
     else {
       console.log("unable to compute progress for ",vidFile);
@@ -307,7 +315,6 @@ function loadVid(vidFile, vidType, i){
 
     if (this.status == 200) {
       var ltv = loadThisVid(this.response);      
-      dothis(ltv);
     }
   };
 
@@ -317,6 +324,10 @@ function loadVid(vidFile, vidType, i){
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
       if (i != 0){ video.style.display="none"; }
+      else{
+        video.style.display="block";
+        if(skipOn){ skipUI(); }
+      }
       console.log("Loading video "+vidFile+" into element video"+i);
       console.log(elementID);
       console.log("video: ", video);
@@ -338,13 +349,6 @@ function loadVid(vidFile, vidType, i){
         vjsPlayer(width, height, i);
       }, false );
     }
-
-    function dothis(callback){
-      console.log("vjspppplayer");
-      // vjsPlayer(i);
-  }
-  
-
 
 
   xhr.send();
