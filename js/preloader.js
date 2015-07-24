@@ -98,11 +98,11 @@ function shuffle(array) {
 }
 
 // initialize video player and its UI 
-var vjsPlayer = function(i){
+var vjsPlayer = function(w, h, i){
   // add videojs player to each video
   var options = {
-    "width": $("#video"+i).prop('videoWidth'),
-    "height": $("#video"+i).prop('videoHeight'),
+    "width": w,
+    "height": h,
     controlBar: {
       playToggle: (playOn ? true : false),
       fullscreenToggle: (fullscOn ? true : false),
@@ -135,8 +135,8 @@ var vjsPlayer = function(i){
 
 
   if(vindex == i){
-      theVideo.style.display="block";
-      showVjs("video"+i);
+    theVideo.style.display="block";
+    showVjs("video"+i);
   }
   else{
     theVideo.style.display="none";
@@ -197,11 +197,11 @@ function skipUI(){
 }; // end skipUI function
 
 function addVjs(vidElement, options){
-    var thePlayer = videojs(vidElement, options, function(){
-      console.log("initializing video js player for "+vidElement);
-      this.addClass("vjs-big-play-centered");
-    });
-    if(rwOn){
+  var thePlayer = videojs(vidElement, options, function(){
+    console.log("initializing video js player for "+vidElement);
+    this.addClass("vjs-big-play-centered");
+  });
+  if(rwOn){
       ///// TO BE DONE FULLY!!
       var rwBtn = thePlayer.controlBar.addChild('button',{
         text: "REWIND",
@@ -304,13 +304,21 @@ function loadVid(vidFile, vidType, i){
   xhr.open('GET', vidFile, true);
   xhr.responseType = 'blob';
   xhr.onload = function(e) {
+
     if (this.status == 200) {
-      var myBlob = this.response;
-      var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
+      var ltv = loadThisVid(this.response);      
+      dothis(ltv);
+    }
+  };
+
+  function loadThisVid(response){
+    var myBlob = response;
+    var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
       if (i != 0){ video.style.display="none"; }
       console.log("Loading video "+vidFile+" into element video"+i);
+      console.log(elementID);
       console.log("video: ", video);
       video.src = vid;
       video.type=vidType ;
@@ -322,11 +330,22 @@ function loadVid(vidFile, vidType, i){
       });
       vidElements.push(video);
       console.log("elementID: ", elementID)
-      console.log("video width: "+$("#video"+i).prop('videoWidth'));
-      
-      vjsPlayer(i);
+      console.log("video width: "+video.videoWidth);
+      video.addEventListener( "loadedmetadata", function (e) {
+        var width = this.videoWidth,
+        height = this.videoHeight;
+        console.log("width listener: ", width);
+        vjsPlayer(width, height, i);
+      }, false );
     }
-  };
+
+    function dothis(callback){
+      console.log("vjspppplayer");
+      // vjsPlayer(i);
+  }
+  
+
+
 
   xhr.send();
 
