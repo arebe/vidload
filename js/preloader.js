@@ -309,8 +309,9 @@ function loadVid(vidFile, vidType, i){
       var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
-      video.style.display="none";
+      if (i != 0){ video.style.display="none"; }
       console.log("Loading video "+vidFile+" into element video"+i);
+      console.log("video: ", video);
       video.src = vid;
       video.type=vidType ;
       video.controls=true;
@@ -320,6 +321,9 @@ function loadVid(vidFile, vidType, i){
         $('input[name="'+vidFile+'"]').val(++v);
       });
       vidElements.push(video);
+      console.log("elementID: ", elementID)
+      console.log("video width: "+$("#video"+i).prop('videoWidth'));
+      
       vjsPlayer(i);
     }
   };
