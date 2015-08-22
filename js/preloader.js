@@ -45,15 +45,15 @@ var allVideos = {
 };
 
 
-var randomOrder = true; // done - set to false if playlist order is non-random
+var randomOrder = true; // set to false if playlist order is non-random
 
 //== Playing behavior 
-var autoplayOn = false;  /// todo -autoplay video upon clicking "next"
+var autoplayOn = false;  /// **TODO** -autoplay video upon clicking "next"
 
 
 //=== UI control toggles - set to false to remove from UI 
 var playOn = true;
-var skipOn = true; 
+var skipOn = true;
 var volumeOn =  true;
 var muteOn = true;
 var durationOn = true;
@@ -204,6 +204,7 @@ function addVjs(vidElement, options){
 
   function showVjs(vidElement, i){
     $("#vid"+vindex).show();
+    $("#progress"+vindex).show();
     var newVideo = document.getElementById(vidElement+"_html5_api");
     newVideo.style.display="inline block";
     var theVjs = document.getElementById(vidElement);
@@ -214,6 +215,7 @@ function addVjs(vidElement, options){
 
   function hideVjs(vidElement, i){
     $("#vid"+i).hide();
+    $("#progress"+vindex).hide();
     var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(oldVideo).pause();
