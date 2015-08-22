@@ -262,6 +262,7 @@ var preLoader = function(){
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
     $("#videos").append('<div id="vid'+i+'"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
+    if (i == 0){ $("#progress"+i).show(); }
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);

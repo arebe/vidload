@@ -13,6 +13,7 @@ progress {
     height: 1em;
     width: 10em;
     vertical-align: -0.2em;
+    display: none;
 }
 
 /*---- transport control buttons -----*/
