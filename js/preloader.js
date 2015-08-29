@@ -8,38 +8,46 @@ var allVideos = {
   "webm": "videos/01-16s_h264.webm",
   "ogg": "videos/01-16s_h264.ogv", 
   "doubleplay": "true",
+  "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 2",
 "h264": "videos/02-18s_h264.mp4",
 "webm": "videos/02-18s_h264.webm",  
 "ogg": "videos/02-18s_h264.ogv",  
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 3",
 "h264": "videos/03-13s_h264.mp4",
 "webm": "videos/03-13s_h264.webm",
 "ogg": "videos/03-13s_h264.ogv", 
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 4",
 "h264": "videos/04-13s_h264.mp4",
 "webm": "videos/04-13s_h264.webm",
 "ogg": "videos/04-13s_h264.ogv", 
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 5",
 "h264": "videos/05-22s_h264.mp4",
 "webm": "videos/05-22s_h264.webm",
 "ogg": "videos/05-22s_h264.ogv",
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 6",
 "h264": "videos/magenta_test.mp4",
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+
 },
 {"title": "video 7",
 "h264": "videos/magenta_test2.mp4",
 "doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 },
 ]
 };
@@ -140,7 +148,7 @@ var prevBtn, nextBtn;
 var playing, speed, ffing, rwing, rwinterval;
 
 function skipUI(){
-  
+
 
   var theVideo = document.getElementById("video"+vindex);
 
@@ -202,21 +210,21 @@ function addVjs(vidElement, options){
   });
 }
 
-  function showVjs(vidElement, i){
-    $("#vid"+vindex).show();
-    $("#progress"+vindex).show();
-    var newVideo = document.getElementById(vidElement+"_html5_api");
-    newVideo.style.display="inline block";
-    var theVjs = document.getElementById(vidElement);
-    theVjs.style.display="block";
-    $("#"+vidElement).addClass("video-js vjs-default-skin");
-    console.log("showing video js player for "+vidElement);
-  }
+function showVjs(vidElement, i){
+  $("#vid"+vindex).show();
+  if($("#vid"+vindex).attr("data-loaded")=="false"){ $("#progress"+vindex).show(); }
+  var newVideo = document.getElementById(vidElement+"_html5_api");
+  newVideo.style.display="inline block";
+  var theVjs = document.getElementById(vidElement);
+  theVjs.style.display="block";
+  $("#"+vidElement).addClass("video-js vjs-default-skin");
+  console.log("showing video js player for "+vidElement);
+}
 
-  function hideVjs(vidElement, i){
-    $("#vid"+i).hide();
-    $("#progress"+vindex).hide();
-    var oldVideo = document.getElementById(vidElement);
+function hideVjs(vidElement, i){
+  $("#vid"+i).hide();
+  $("#progress"+vindex).hide();
+  var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(oldVideo).pause();
     videojs(oldVideo).currentTime(0);
@@ -263,7 +271,7 @@ var preLoader = function(){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
-    $("#videos").append('<div id="vid'+i+'"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
+    $("#videos").append('<div id="vid'+i+'" data-loaded="false"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
     if (i == 0){ $("#progress"+i).show(); }
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
@@ -291,6 +299,7 @@ function loadVid(vidFile, vidType, i){
       console.log("computable - "+perctload, vidFile);
       if(perctload == 100){
         $("#progress"+i).hide();
+        $("#vid"+i).attr("data-loaded", "true");
       }
     }
     else {
@@ -332,6 +341,6 @@ function loadVid(vidFile, vidType, i){
     }
 
 
-  xhr.send();
+    xhr.send();
 
-}
+  }
