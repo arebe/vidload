@@ -206,7 +206,6 @@ function addVjs(vidElement, options){
   var thePlayer = videojs(vidElement, options, function(){
     console.log("initializing video js player for "+vidElement);
     this.addClass("vjs-big-play-centered");
-    // document.getElementById(vidElement).style.display="none";
   });
 }
 
@@ -272,6 +271,8 @@ var preLoader = function(){
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
     $("#videos").append('<div id="vid'+i+'" data-loaded="false"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
+    // visibilty settings
+    if(i != 1){ $("#vid"+i).hide(); }
     if (i == 0){ $("#progress"+i).show(); }
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
@@ -282,10 +283,14 @@ var preLoader = function(){
   // player element w progress bar
   var videoPlayer = document.getElementById("video_player"); 
   videoPlayer.style.display="table";
+  // disable right-click in the video player
+  videoPlayer.addEventListener("contextmenu", function(e){
+      e.preventDefault();
+    }, false);
 
 };
 
-$(document).ready(preLoader());
+$(document).ready( preLoader() );
 
 // load the videos asynchronously while the user waits
 // based on http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
