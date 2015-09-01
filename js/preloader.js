@@ -60,13 +60,13 @@ var autoplayOn = false;  /// **TODO** -autoplay video upon clicking "next"
 
 
 //=== UI control toggles - set to false to remove from UI 
-var playOn = true;
+var playOn = false;
 var skipOn = false;
-var volumeOn =  true;
-var muteOn = true;
-var durationOn = true;
-var seekOn = true;
-var fullscOn = true;
+var volumeOn =  false;
+var muteOn = false;
+var durationOn = false;
+var seekOn = false;
+var fullscOn = false;
 
 
 //====================================================//
@@ -203,14 +203,21 @@ function addVjs(vidElement, options){
 
 function showVjs(i){
   var vidElement = "video"+i;
-  $("#vid"+vindex).show();
-  if($("#vid"+vindex).attr("data-loaded")=="false"){ $("#progress"+vindex).show(); }
-  var newVideo = document.getElementById(vidElement+"_html5_api");
-  newVideo.style.display="inline block";
-  var theVjs = document.getElementById(vidElement);
-  theVjs.style.display="block";
-  $("#"+vidElement).addClass("video-js vjs-default-skin");
-  console.log("showing video js player for "+vidElement);
+  $("#vid"+i).show();
+  if($("#vid"+i).attr("data-loaded")=="false"){
+    $("#progress"+i).show(); 
+    $("#progress"+i).attr('value', $("#progress"+i).prop('value')+1).trigger("change");
+    $("#progress"+i).on('change', function(){
+      if(this.value > 99){
+        var newVideo = document.getElementById(vidElement+"_html5_api");
+        newVideo.style.display="inline block";
+        var theVjs = document.getElementById(vidElement);
+        theVjs.style.display="block";
+        $("#"+vidElement).addClass("video-js vjs-default-skin");
+        console.log("showing video js player for "+vidElement);
+      }
+    })
+  }
 }
 
 function hideVjs(i){
@@ -297,7 +304,7 @@ function loadVid(vidFile, vidType, i){
       if(perctload == 100){
         $("#vid"+i).attr("data-loaded", "true");
         $("#progress"+i).hide();
-        $("#video"+i).show();
+        showVjs(i);
       }
     }
     else {
@@ -318,8 +325,6 @@ function loadVid(vidFile, vidType, i){
     var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
-      
-      console.log("Loading video "+vidFile+" into element video"+i);
       video.src = vid;
       video.type=vidType ;
       video.controls=true;
