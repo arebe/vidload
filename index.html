@@ -2,13 +2,13 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-        <title>HTML5 Video Preloader Prototype</title>
-	<link rel="stylesheet" href="css/normalize.css" type="text/css">
-	<link rel="stylesheet" href="css/main.css" type="text/css">
+    <title>HTML5 Video Preloader Prototype</title>
+    <link rel="stylesheet" href="css/normalize.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
     <link rel="stylesheet" href="css/vidplayer.css" type="text/css">
-	<script src="js/modernizr.custom.03694.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="js/modernizr.custom.03694.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <!-- video.js -->
     <link href="http://vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
     <script src="http://vjs.zencdn.net/4.11/video.js"></script>
@@ -17,28 +17,58 @@
 
 <body>
     <header>
-          HTML5 VIDEO PRELOADER PROTOTYPE
-    </header>
-    <!--  -->
-<!--     <div id="loading">
-        <div class="center">
-            <h2>Loading videos, please wait.</h2>
-            <progress value="2" max="100"></progress>
-        </div> <!-- end center -->
-    </div> <!-- end loading --> 
+      HTML5 VIDEO PRELOADER PROTOTYPE
+  </header>
 
-    <div class="center">
-        <div id="video_player">
-            <div id="videos"></div>
-        </div> <!-- end center -->
-    </div><!-- end video_player -->
+  <div class="center">
+    <div id="video_player">
+        <div id="videos"></div>
+    </div> <!-- end center -->
+</div><!-- end video_player -->
 
-    <form id="myForm" name="myForm">
-        <input type="hidden" name="userID">
-    </form>
+<form id="myForm" name="myForm">
+    <input type="hidden" name="userID">
+</form>
+
+<p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(4)"></p>
+<p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(4)"></p>
 
 
-	<!-- run javascript after html has loaded -->
-    <script src="js/preloader.js"></script>
+<!-- run javascript after html has loaded -->
+<script src="js/preloader.js"></script>
+
+<script language="JavaScript">
+
+function DisplayIt(vindex){
+  var vidElement = "video"+vindex;
+  $("#vid"+vindex).show();
+  if($("#vid"+vindex).attr("data-loaded")=="false"){ 
+    $("#progress"+vindex).show(); 
+}
+else{
+  var newVideo = document.getElementById(vidElement+"_html5_api");
+  newVideo.style.display="inline block";
+  var theVjs = document.getElementById(vidElement);
+  theVjs.style.display="block";
+  $("#"+vidElement).addClass("video-js vjs-default-skin");
+}
+
+console.log("showing video js player for "+vidElement);
+}
+
+function HideIt(vindex){
+  var vidElement = "video"+vindex;
+  $("#vid"+vindex).hide();
+  $("#progress"+vindex).hide();
+  var oldVideo = document.getElementById(vidElement);
+  // reset to beginning 
+  videojs(oldVideo).pause();
+  videojs(oldVideo).currentTime(0);
+  oldVideo.style.display="none";
+  $("#"+vidElement).removeClass("video-js vjs-default-skin");
+  console.log("player hidden for "+vidElement);
+}
+
+</script>
 </body>
 </html>

@@ -61,7 +61,7 @@ var autoplayOn = false;  /// **TODO** -autoplay video upon clicking "next"
 
 //=== UI control toggles - set to false to remove from UI 
 var playOn = true;
-var skipOn = true;
+var skipOn = false;
 var volumeOn =  true;
 var muteOn = true;
 var durationOn = true;
@@ -125,17 +125,9 @@ var vjsPlayer = function(w, h, i){
 
   addVjs("video"+i, options);
   var thisVideo = document.getElementById("video"+vindex);
-
-  if(i == 0){
-    console.log("the I is: "+i);
-    thisVideo.style.display="block";
-    showVjs("video"+i, i);
-  }
-  else{
-    thisVideo.style.display="none";
-    hideVjs("video"+i, i);
-    showVjs("video"+vindex, vindex);
-  }
+  // hide the video
+  thisVideo.style.display="none";
+  hideVjs(i);
 
 }; // end vjsplayer function
 
@@ -166,15 +158,15 @@ function skipUI(){
       prevBtn.disabled = true;
     }
     else if (vindex == 1) {
-      hideVjs("video"+vindex, vindex);
+      hideVjs(vindex);
       vindex--;
-      showVjs("video"+vindex, vindex);
+      showVjs(vindex);
       prevBtn.disabled = true;
     }
     else{
-      hideVjs("video"+vindex, vindex);        
+      hideVjs(vindex);        
       vindex--;
-      showVjs("video"+vindex, vindex);
+      showVjs(vindex);
       nextBtn.disabled = false;
     }
   });
@@ -185,16 +177,16 @@ function skipUI(){
       nextBtn.disabled = true;
     }
     else if(vindex == vidElements.length-2){
-      hideVjs("video"+vindex);
+      hideVjs(vindex);
       vindex++;
-      showVjs("video"+vindex, vindex);
+      showVjs(vindex);
       prevBtn.disabled = false;
       nextBtn.disabled = true;
     }
     else{
-      hideVjs("video"+vindex);
+      hideVjs(vindex);
       vindex++;
-      showVjs("video"+vindex, vindex);
+      showVjs(vindex);
       prevBtn.disabled = false;
     }
 
@@ -209,7 +201,8 @@ function addVjs(vidElement, options){
   });
 }
 
-function showVjs(vidElement, i){
+function showVjs(i){
+  var vidElement = "video"+i;
   $("#vid"+vindex).show();
   if($("#vid"+vindex).attr("data-loaded")=="false"){ $("#progress"+vindex).show(); }
   var newVideo = document.getElementById(vidElement+"_html5_api");
@@ -220,9 +213,10 @@ function showVjs(vidElement, i){
   console.log("showing video js player for "+vidElement);
 }
 
-function hideVjs(vidElement, i){
+function hideVjs(i){
+  var vidElement = "video"+i;
   $("#vid"+i).hide();
-  $("#progress"+vindex).hide();
+  // $("#progress"+vindex).hide();
   var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(oldVideo).pause();
@@ -271,9 +265,7 @@ var preLoader = function(){
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
     $("#videos").append('<div id="vid'+i+'" data-loaded="false"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
-    // visibilty settings
-    if(i != 1){ $("#vid"+i).hide(); }
-    if (i == 0){ $("#progress"+i).show(); }
+    $("#vid"+i).hide();
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
@@ -285,8 +277,8 @@ var preLoader = function(){
   videoPlayer.style.display="table";
   // disable right-click in the video player
   videoPlayer.addEventListener("contextmenu", function(e){
-      e.preventDefault();
-    }, false);
+    e.preventDefault();
+  }, false);
 
 };
 
@@ -303,8 +295,9 @@ function loadVid(vidFile, vidType, i){
       $("#progress"+i).val(perctload);
       console.log("computable - "+perctload, vidFile);
       if(perctload == 100){
-        $("#progress"+i).hide();
         $("#vid"+i).attr("data-loaded", "true");
+        $("#progress"+i).hide();
+        $("#video"+i).show();
       }
     }
     else {
@@ -344,7 +337,6 @@ function loadVid(vidFile, vidType, i){
         if(i === 0 && skipOn){ skipUI(); }
       }, false );
     }
-
 
     xhr.send();
 
