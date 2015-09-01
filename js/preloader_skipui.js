@@ -126,16 +126,8 @@ var vjsPlayer = function(w, h, i){
   addVjs("video"+i, options);
   var thisVideo = document.getElementById("video"+vindex);
 
-  if(i == 0){
-    console.log("the I is: "+i);
-    thisVideo.style.display="block";
-    showVjs("video"+i, i);
-  }
-  else{
-    thisVideo.style.display="none";
-    hideVjs("video"+i, i);
-    showVjs("video"+vindex, vindex);
-  }
+  thisVideo.style.display="block";
+
 
 }; // end vjsplayer function
 
@@ -145,7 +137,7 @@ var theVideo;
 // buttons - so they can access each other
 var prevBtn, nextBtn;
 // player state
-var playing, speed, ffing, rwing, rwinterval;
+// var playing, speed, ffing, rwing, rwinterval;
 
 function skipUI(){
 
@@ -311,7 +303,6 @@ function loadVid(vidFile, vidType, i){
   xhr.open('GET', vidFile, true);
   xhr.responseType = 'blob';
   xhr.onload = function(e) {
-
     if (this.status == 200) {
       var ltv = loadThisVid(this.response, i);      
     }
@@ -322,7 +313,6 @@ function loadVid(vidFile, vidType, i){
     var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
       // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
-      
       console.log("Loading video "+vidFile+" into element video"+i);
       video.src = vid;
       video.type=vidType ;

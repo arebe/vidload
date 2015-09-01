@@ -122,13 +122,8 @@ var vjsPlayer = function(w, h, i){
       muteToggle: (muteOn ? true : false),
     },
   };
-
   addVjs("video"+i, options);
   var thisVideo = document.getElementById("video"+vindex);
-  // hide the video
-  thisVideo.style.display="none";
-  hideVjs(i);
-
 }; // end vjsplayer function
 
 /// some globals -- todo: refactor this ---//
@@ -136,12 +131,8 @@ var vjsPlayer = function(w, h, i){
 var theVideo;
 // buttons - so they can access each other
 var prevBtn, nextBtn;
-// player state
-var playing, speed, ffing, rwing, rwinterval;
 
 function skipUI(){
-
-
   var theVideo = document.getElementById("video"+vindex);
 
   $("#video_player").append('<button type="button" class="btn_skip" id="btn_prev" disabled> &lt; &lt; </button>');
@@ -282,6 +273,7 @@ var preLoader = function(){
   // player element w progress bar
   var videoPlayer = document.getElementById("video_player"); 
   videoPlayer.style.display="table";
+  $("#video_player").hide();
   // disable right-click in the video player
   videoPlayer.addEventListener("contextmenu", function(e){
     e.preventDefault();
@@ -304,7 +296,6 @@ function loadVid(vidFile, vidType, i){
       if(perctload == 100){
         $("#vid"+i).attr("data-loaded", "true");
         $("#progress"+i).hide();
-        showVjs(i);
       }
     }
     else {

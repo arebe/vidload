@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="css/normalize.css" type="text/css">
     <link rel="stylesheet" href="css/main.css" type="text/css">
     <link rel="stylesheet" href="css/vidplayer.css" type="text/css">
-    <script src="js/modernizr.custom.03694.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="js/libs/modernizr.custom.03694.js"></script>
+    <script src="js/libs/jquery-1.11.3.min.js"></script>
+    <script src="js/libs/jquery-ui.min.js"></script>
     <!-- video.js -->
-    <link href="http://vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
-    <script src="http://vjs.zencdn.net/4.11/video.js"></script>
+    <link href="css/video-js.min.css" rel="stylesheet">
+    <script src="js/libs/video.js"></script>
 
 </head>
 
@@ -39,34 +39,37 @@
 
 <script language="JavaScript">
 
-function DisplayIt(vindex){
-  var vidElement = "video"+vindex;
-  $("#vid"+vindex).show();
-  if($("#vid"+vindex).attr("data-loaded")=="false"){ 
-    $("#progress"+vindex).show(); 
-}
-else{
-  var newVideo = document.getElementById(vidElement+"_html5_api");
-  newVideo.style.display="inline block";
-  var theVjs = document.getElementById(vidElement);
-  theVjs.style.display="block";
-  $("#"+vidElement).addClass("video-js vjs-default-skin");
-}
+function DisplayIt(i){
+  $("#video_player").show();
+  var vidElement = "video"+i;
+  $("#vid"+i).show();
+  if($("#vid"+i).attr("data-loaded")=="false"){
+    $("#progress"+i).show(); 
+  }
+  else{
+    displayVid();
+  }
 
-console.log("showing video js player for "+vidElement);
+  function displayVid(){
+    var newVideo = document.getElementById(vidElement+"_html5_api");
+    newVideo.style.display="inline block";
+    var theVjs = document.getElementById(vidElement);
+    theVjs.style.display="block";
+    $("#"+vidElement).addClass("video-js vjs-default-skin");
+    videojs(vidElement).play();
+   }
 }
 
 function HideIt(vindex){
+  $("#video_player").hide();
   var vidElement = "video"+vindex;
   $("#vid"+vindex).hide();
   $("#progress"+vindex).hide();
   var oldVideo = document.getElementById(vidElement);
   // reset to beginning 
-  videojs(oldVideo).pause();
-  videojs(oldVideo).currentTime(0);
-  oldVideo.style.display="none";
+  videojs(vidElement).pause();
+  videojs(vidElement).currentTime(0);
   $("#"+vidElement).removeClass("video-js vjs-default-skin");
-  console.log("player hidden for "+vidElement);
 }
 
 </script>
