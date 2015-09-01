@@ -262,7 +262,7 @@ var preLoader = function(){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
-    $("#videos").append('<div id="vid'+i+'" data-loaded="false"><video id="video'+i+'"  > Your browser does not support the video tag. </video><progress id="progress'+i+'" value="2" max="100"></progress></div>');
+    $("#videos").append('<div id="vid'+i+'" data-loaded="false"><progress id="progress'+i+'" value="2" max="100"></progress><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
     $("#vid"+i).hide();
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));

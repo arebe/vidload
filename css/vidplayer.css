@@ -9,11 +9,13 @@
 progress {
     -webkit-appearance: progress-bar;
     box-sizing: border-box;
-    display: inline-block;
-    height: 1em;
+    display: block;
+    height: 2em;
     width: 10em;
     vertical-align: -0.2em;
-    display: none;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: auto;
+
 }
 
 /*---- transport control buttons -----*/
