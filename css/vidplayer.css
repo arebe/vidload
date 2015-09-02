@@ -18,6 +18,11 @@ progress {
 
 }
 
+.ptext{
+  color: #fff;
+  padding-top: 0.5em;
+}
+
 /*---- transport control buttons -----*/
 #btn_play {
   background: #1c451c;

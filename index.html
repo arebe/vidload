@@ -44,11 +44,9 @@ function DisplayIt(i){
   var vidElement = "video"+i;
   $("#vid"+i).show();
   if($("#vid"+i).attr("data-loaded")=="false"){
-    $("#progress"+i).show(); 
+    $("#pbar"+i).show(); 
   }
-  else{
-    displayVid();
-  }
+  else{ displayVid(); }
 
   function displayVid(){
     var newVideo = document.getElementById(vidElement+"_html5_api");
@@ -60,11 +58,12 @@ function DisplayIt(i){
    }
 }
 
+
 function HideIt(vindex){
   $("#video_player").hide();
   var vidElement = "video"+vindex;
   $("#vid"+vindex).hide();
-  $("#progress"+vindex).hide();
+  $("#pbar"+vindex).hide();
   var oldVideo = document.getElementById(vidElement);
   // reset to beginning 
   videojs(vidElement).pause();

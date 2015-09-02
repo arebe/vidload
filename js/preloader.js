@@ -55,11 +55,8 @@ var allVideos = {
 
 var randomOrder = true; // set to false if playlist order is non-random
 
-//== Playing behavior 
-var autoplayOn = false;  /// **TODO** -autoplay video upon clicking "next"
-
-
 //=== UI control toggles - set to false to remove from UI 
+var controlsOn = false; // this must be set to true for any of the below to work
 var playOn = false;
 var skipOn = false;
 var volumeOn =  false;
@@ -67,8 +64,6 @@ var muteOn = false;
 var durationOn = false;
 var seekOn = false;
 var fullscOn = false;
-
-
 //====================================================//
 //===================================================//
 
@@ -108,7 +103,8 @@ var vjsPlayer = function(w, h, i){
   var options = {
     "width": w,
     "height": h,
-    controlBar: {
+
+    controlBar: (controlsOn ? {
       playToggle: (playOn ? true : false),
       fullscreenToggle: (fullscOn ? true : false),
       currentTimeDisplay: (durationOn ? true : false),
@@ -120,7 +116,7 @@ var vjsPlayer = function(w, h, i){
       },
       volumeControl: (volumeOn ? true : false),
       muteToggle: (muteOn ? true : false),
-    },
+    } : false),
   };
   addVjs("video"+i, options);
   var thisVideo = document.getElementById("video"+vindex);
@@ -129,7 +125,7 @@ var vjsPlayer = function(w, h, i){
 /// some globals -- todo: refactor this ---//
 // video element
 var theVideo;
-// buttons - so they can access each other
+// skipUI buttons - so they can access each other
 var prevBtn, nextBtn;
 
 function skipUI(){
@@ -214,7 +210,6 @@ function showVjs(i){
 function hideVjs(i){
   var vidElement = "video"+i;
   $("#vid"+i).hide();
-  // $("#progress"+vindex).hide();
   var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(oldVideo).pause();
@@ -262,7 +257,7 @@ var preLoader = function(){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
-    $("#videos").append('<div id="vid'+i+'" data-loaded="false"><progress id="progress'+i+'" value="2" max="100"></progress><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
+    $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'"><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><progress id="progress'+i+'" value="2" max="100"></progress></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
     $("#vid"+i).hide();
     // load the videos into their elements
     console.log("video " +i+ " filename: " + (vidList[i]));
@@ -295,7 +290,7 @@ function loadVid(vidFile, vidType, i){
       console.log("computable - "+perctload, vidFile);
       if(perctload == 100){
         $("#vid"+i).attr("data-loaded", "true");
-        $("#progress"+i).hide();
+        $("#pbar"+i).hide();
       }
     }
     else {
