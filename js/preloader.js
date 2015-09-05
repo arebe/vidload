@@ -6,46 +6,43 @@ var allVideos = {
   {"title": "video 1",
   "h264": "videos/01-16s_h264.mp4",
   "webm": "videos/01-16s_h264.webm",
-  "ogg": "videos/01-16s_h264.ogv", 
   "doubleplay": "true",
   "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 2",
 "h264": "videos/02-18s_h264.mp4",
 "webm": "videos/02-18s_h264.webm",  
-"ogg": "videos/02-18s_h264.ogv",  
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 3",
 "h264": "videos/03-13s_h264.mp4",
 "webm": "videos/03-13s_h264.webm",
-"ogg": "videos/03-13s_h264.ogv", 
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 4",
 "h264": "videos/04-13s_h264.mp4",
 "webm": "videos/04-13s_h264.webm",
-"ogg": "videos/04-13s_h264.ogv", 
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 5",
 "h264": "videos/05-22s_h264.mp4",
 "webm": "videos/05-22s_h264.webm",
-"ogg": "videos/05-22s_h264.ogv",
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 },
 {"title": "video 6",
 "h264": "videos/magenta_test.mp4",
+"webm": "videos/magenta_test.webm",
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 
 },
 {"title": "video 7",
 "h264": "videos/magenta_test2.mp4",
+"webm": "videos/magenta_test2.webm",
 "doubleplay": "true",
 "waitmessage": "The video will play again in 5 seconds."
 },
@@ -72,10 +69,6 @@ var vidElements = [];
 // display index
 var vindex = 0;
 
-console.log("modernizr video h264 support? " + Modernizr.video.h264);
-console.log("modernizr video webm support? " + Modernizr.video.webm);
-console.log("modernizr video ogg support? " + Modernizr.video.ogg);
-
 // this function will randomly shuffle the list of videos upon page load
 // from http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
@@ -93,7 +86,6 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
 }
 
@@ -140,7 +132,6 @@ function skipUI(){
 
   // iterate through video playlist backwards
   prevBtn.addEventListener("click", function(){
-    console.log("prev click, vindex: ", vindex);
     if(vindex == 0){
       prevBtn.disabled = true;
     }
@@ -159,7 +150,6 @@ function skipUI(){
   });
   // iterate through video playlist forwards
   nextBtn.addEventListener("click", function(){
-    console.log("next click, vindex: ", vindex);
     if(vindex == vidElements.length-1 ){
       nextBtn.disabled = true;
     }
@@ -183,7 +173,6 @@ function skipUI(){
 
 function addVjs(vidElement, options){
   var thePlayer = videojs(vidElement, options, function(){
-    console.log("initializing video js player for "+vidElement);
     this.addClass("vjs-big-play-centered");
   });
 }
@@ -201,7 +190,6 @@ function showVjs(i){
         var theVjs = document.getElementById(vidElement);
         theVjs.style.display="block";
         $("#"+vidElement).addClass("video-js vjs-default-skin");
-        console.log("showing video js player for "+vidElement);
       }
     })
   }
@@ -216,7 +204,6 @@ function hideVjs(i){
     videojs(oldVideo).currentTime(0);
     oldVideo.style.display="none";
     $("#"+vidElement).removeClass("video-js vjs-default-skin");
-    console.log("player hidden for "+vidElement);
   }
 
 
@@ -226,9 +213,11 @@ var preLoader = function(){
   var vidType ;
 
   // check browser compatibilty and initiate fall-backs
-  if (Modernizr.video.h264){ vidType = "video/mp4";}
-  else if (Modernizr.video.webm){ vidType = "video/webm";}
-  else if(Modernizr.video.ogg){ vidType = "video/ogg";}
+
+  if (Modernizr.video.webm){ vidType = "video/webm";}
+  else if (Modernizr.video.h264){ vidType = "video/mp4";}
+  // if (Modernizr.video.h264){ vidType = "video/mp4";}
+  // else if (Modernizr.video.webm){ vidType = "video/webm";}
   else { console.log("no html5 video support :( consider upgrading to a modern browser"); }
 
   // make a list of video files, basd on file type
@@ -240,8 +229,6 @@ var preLoader = function(){
       case "video/webm":
       vidList.push(allVideos.videos[i].webm);
       break;      
-      case "video/ogg":
-      vidList.push(allVideos.videos[i].ogg);
       break;
       default:
       console.log("no html5 video support :( ");
@@ -260,7 +247,6 @@ var preLoader = function(){
     $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'"><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><progress id="progress'+i+'" value="2" max="100"></progress></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
     $("#vid"+i).hide();
     // load the videos into their elements
-    console.log("video " +i+ " filename: " + (vidList[i]));
     loadVid(vidList[i], vidType, i);
     
   }
@@ -279,7 +265,6 @@ var preLoader = function(){
 $(document).ready( preLoader() );
 
 // load the videos asynchronously while the user waits
-// based on http://stackoverflow.com/questions/18251632/another-force-chrome-to-fully-buffer-mp4-video
 function loadVid(vidFile, vidType, i){
 	var elementID = "video"+i;
   var xhr = new XMLHttpRequest();
@@ -287,7 +272,6 @@ function loadVid(vidFile, vidType, i){
     if(e.lengthComputable){
       var perctload = (e.loaded / e.total) *100;
       $("#progress"+i).val(perctload);
-      console.log("computable - "+perctload, vidFile);
       if(perctload == 100){
         $("#vid"+i).attr("data-loaded", "true");
         $("#pbar"+i).hide();
@@ -309,7 +293,6 @@ function loadVid(vidFile, vidType, i){
   function loadThisVid(response, i){
     var myBlob = response;
     var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
-      // myBlob is now the blob that the object URL pointed to.
       var video = document.getElementById(elementID);
       video.src = vid;
       video.type=vidType ;
