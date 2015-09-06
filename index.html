@@ -2,49 +2,107 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-    <title>HTML5 Video Preloader Prototype</title>
-    <link rel="stylesheet" href="css/normalize.css" type="text/css">
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-    <link rel="stylesheet" href="css/vidplayer.css" type="text/css">
-    <script src="js/libs/modernizr.custom.03694.js"></script>
-    <script src="js/libs/jquery-1.11.3.min.js"></script>
-    <script src="js/libs/jquery-ui.min.js"></script>
-    <!-- video.js -->
-    <link href="css/video-js.min.css" rel="stylesheet">
-    <script src="js/libs/video.js"></script>
+  <title>HTML5 Video Preloader Prototype</title>
+  <link rel="stylesheet" href="css/normalize.css" type="text/css">
+  <link rel="stylesheet" href="css/main.css" type="text/css">
+  <link rel="stylesheet" href="css/vidplayer.css" type="text/css">
+  <script src="js/libs/modernizr.custom.03694.js"></script>
+  <script src="js/libs/jquery-1.11.3.min.js"></script>
+  <script src="js/libs/jquery-ui.min.js"></script>
+  <!-- video.js -->
+  <link href="css/video-js.min.css" rel="stylesheet">
+  <script src="js/libs/video.js"></script>
 
 </head>
 
 <body>
-    <header>
-      HTML5 VIDEO PRELOADER PROTOTYPE
+  <header>
+    HTML5 VIDEO PRELOADER PROTOTYPE
   </header>
 
   <div class="center">
     <div id="video_player">
-        <div id="videos"></div>
+      <div id="videos"></div>
     </div> <!-- end video_player -->
-</div> <!-- end center -->
+  </div> <!-- end center -->
 
-<form id="myForm" name="myForm">
+  <form id="myForm" name="myForm">
     <input type="hidden" name="userID">
-</form>
+  </form>
 
-<p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(4)"></p>
-<p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(4)"></p>
+  <p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(3)"></p>
+  <p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(3)"></p>
 
 
-<!-- run javascript after html has loaded -->
-<script src="js/preloader.js"></script>
+  <!-- run javascript after html has loaded -->
+  <script src="js/preloader.js"></script>
 
-<script language="JavaScript">
+  <script language="JavaScript">
+  var allVideos = {
+    "options": {
+      "controlsOn": "false",
+      "playOn": "false",
+      "volumeOn": "false",
+      "muteOn": "false",
+      "durationOn": "false",
+      "seekOn": "false",
+      "fullscOn": "false",
+    },
+    "videos": [
+    {"title": "video 1",
+    "h264": "videos/01-16s_h264.mp4",
+    "webm": "videos/01-16s_h264.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    {"title": "video 2",
+    "h264": "videos/02-18s_h264.mp4",
+    "webm": "videos/02-18s_h264.webm",  
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    {"title": "video 3",
+    "h264": "videos/03-13s_h264.mp4",
+    "webm": "videos/03-13s_h264.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    {"title": "video 4",
+    "h264": "videos/04-13s_h264.mp4",
+    "webm": "videos/04-13s_h264.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    {"title": "video 5",
+    "h264": "videos/05-22s_h264.mp4",
+    "webm": "videos/05-22s_h264.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    {"title": "video 6",
+    "h264": "videos/magenta_test.mp4",
+    "webm": "videos/magenta_test.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
 
-function DisplayIt(i){
+    },
+    {"title": "video 7",
+    "h264": "videos/magenta_test2.mp4",
+    "webm": "videos/magenta_test2.webm",
+    "doubleplay": "true",
+    "waitmessage": "The video will play again in 5 seconds."
+    },
+    ]
+  };
+
+$(document).ready( preLoader(allVideos) );
+
+function DisplayIt(vindex){
   $("#video_player").show();
-  var vidElement = "video"+i;
-  $("#vid"+i).show();
-  if($("#vid"+i).attr("data-loaded")=="false"){
-    $("#pbar"+i).show(); 
+  var vidElement = "video"+vindex;
+  $("#vid"+vindex).show();
+  if($("#vid"+vindex).attr("data-loaded")=="false"){
+    $("#pbar"+vindex).show(); 
   }
   else{ displayVid(); }
 
@@ -55,9 +113,8 @@ function DisplayIt(i){
     theVjs.style.display="block";
     $("#"+vidElement).addClass("video-js vjs-default-skin");
     videojs(vidElement).play();
-   }
+  }
 }
-
 
 function HideIt(vindex){
   $("#video_player").hide();

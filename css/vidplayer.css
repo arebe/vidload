@@ -4,6 +4,7 @@
 	background-repeat: repeat;
 	display: none;
 	margin: 0 auto;
+/*  pointer-events: none;*/
 }
 
 progress {
