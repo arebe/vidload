@@ -47,13 +47,11 @@ var preLoader = function(viddata){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
-    $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'"><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><div id="progress'+i+'"></div></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
+    $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'"><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><div id="progress'+i+'" class="progressBar"><div></div></div></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
     $("#vid"+i).hide();
     // style progress bar
-    $("#progress"+i).progressbar({
-      "value": 2, 
-      "max": 100,
-    });
+    //$("#progress"+i).progressbar();((
+    progress(1, $("#progress"+i));
     // load the videos into their elements
     loadVid(vidList[i], vidType, i);
     
@@ -67,6 +65,12 @@ var preLoader = function(viddata){
   videoPlayer.addEventListener("contextmenu", function(e){
     e.preventDefault();
   }, false);
+
+  // update progress bar
+  function progress(percent, $element) {
+    var progressBarWidth = percent * $element.width() / 100;
+    $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
+  }
 
 
   // initialize videojs player and its UI 
@@ -108,10 +112,11 @@ var preLoader = function(viddata){
     xhr.onprogress = function(e){
       if(e.lengthComputable){
         var perctload = (e.loaded / e.total) *100;
-        $("#progress"+i).progressbar("value", perctload);
+        progress(perctload, $("#progress"+i));
+        
         if(perctload == 100){
           $("#vid"+i).attr("data-loaded", "true");
-          $("#pbar"+i).hide();
+          //$("#pbar"+i).hide();
         }
       }
       else {

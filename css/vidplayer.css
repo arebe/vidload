@@ -7,16 +7,20 @@
 /*  pointer-events: none;*/
 }
 
-progress {
-    -webkit-appearance: progress-bar;
-    box-sizing: border-box;
-    display: block;
-    height: 2em;
-    width: 10em;
-    vertical-align: -0.2em;
-    padding: 0.5em 1em 0.5em 1em;
-    margin: auto;
+.progressBar {
+    width: 400px;
+    height: 22px;
+    border: 1px solid #111;
+    background-color: #292929;
+}
 
+.progressBar div {
+    height: 100%;
+    color: #fff;
+    text-align: right;
+    line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+    width: 0;
+    background-color: #0099ff;
 }
 
 .ptext{
@@ -24,77 +28,3 @@ progress {
   padding-top: 0.5em;
 }
 
-/*---- transport control buttons -----*/
-#btn_play {
-  background: #1c451c;
-  background-image: -webkit-linear-gradient(top, #1c451c, #99cc8e);
-  background-image: -moz-linear-gradient(top, #1c451c, #99cc8e);
-  background-image: -ms-linear-gradient(top, #1c451c, #99cc8e);
-  background-image: -o-linear-gradient(top, #1c451c, #99cc8e);
-  background-image: linear-gradient(to bottom, #1c451c, #99cc8e);
-  -webkit-border-radius: 11;
-  -moz-border-radius: 11;
-  border-radius: 11px;
-  font-family: Courier New;
-  color: #ffffff;
-  font-size: 12px;
-  padding: 10px 20px 10px 20px;
-  border: solid #000000 2px;
-  text-decoration: none;
-}
-
-#btn_play:hover {
-  background: #2abf2f;
-  background-image: -webkit-linear-gradient(top, #2abf2f, #9fd934);
-  background-image: -moz-linear-gradient(top, #2abf2f, #9fd934);
-  background-image: -ms-linear-gradient(top, #2abf2f, #9fd934);
-  background-image: -o-linear-gradient(top, #2abf2f, #9fd934);
-  background-image: linear-gradient(to bottom, #2abf2f, #9fd934);
-  text-decoration: none;
-}
-
-
-#btn_next, #btn_prev, #btn_ff, #btn_rw {
-  background: #1c2a45;
-  background-image: -webkit-linear-gradient(top, #1c2a45, #8ea3cc);
-  background-image: -moz-linear-gradient(top, #1c2a45, #8ea3cc);
-  background-image: -ms-linear-gradient(top, #1c2a45, #8ea3cc);
-  background-image: -o-linear-gradient(top, #1c2a45, #8ea3cc);
-  background-image: linear-gradient(to bottom, #1c2a45, #8ea3cc);
-  -webkit-border-radius: 11;
-  -moz-border-radius: 11;
-  border-radius: 11px;
-  font-family: Courier New;
-  color: #ffffff;
-  font-size: 12px;
-  padding: 10px 20px 10px 20px;
-  border: solid #000000 2px;
-  text-decoration: none;
-}
-
-#btn_next:hover, #btn_prev:hover, #btn_ff:hover, #btn_rw:hover {
-  background: #4f4875;
-  background-image: -webkit-linear-gradient(top, #4f4875, #989cf5);
-  background-image: -moz-linear-gradient(top, #4f4875, #989cf5);
-  background-image: -ms-linear-gradient(top, #4f4875, #989cf5);
-  background-image: -o-linear-gradient(top, #4f4875, #989cf5);
-  background-image: linear-gradient(to bottom, #4f4875, #989cf5);
-  text-decoration: none;
-}
-
-#btn_next[disabled], #btn_prev[disabled], #btn_next[disabled]:hover, #btn_prev[disabled]:hover {
-  background: #000000;
-  background-image: -webkit-linear-gradient(top, #000000, #b8b8b8);
-  background-image: -moz-linear-gradient(top, #000000, #b8b8b8);
-  background-image: -ms-linear-gradient(top, #000000, #b8b8b8);
-  background-image: -o-linear-gradient(top, #000000, #b8b8b8);
-  background-image: linear-gradient(to bottom, #000000, #b8b8b8);
-  -webkit-border-radius: 11;
-  -moz-border-radius: 11;
-  border-radius: 11px;
-  font-family: Courier New;
-  color: #b8b8b8;
-  font-size: 12px;
-  padding: 10px 20px 10px 20px;
-  text-decoration: none;
-}
