@@ -17,6 +17,6 @@ Prototype video player designed to:
 
 License
 -------
-Original code in this repo is licensed under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html). Its dependencies include Modernizr.js and jQuery (MIT license), and Video.js (Apache license).
+Original code in this repo is licensed under [MIT License](https://opensource.org/licenses/MIT). Its dependencies include Modernizr.js and jQuery (MIT license), and Video.js ([Apache license](https://github.com/videojs/video.js/blob/stable/LICENSE)).
 
 *HTML5 Preloader* was produced for Zebbler Studios [zebblerstudios.com](http://zebblerstudios.com/)
