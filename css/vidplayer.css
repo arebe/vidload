@@ -4,8 +4,7 @@
 
 
 #video_player { 
-	background-image:url('../images/zwartevilt.png');
-	background-repeat: repeat;
+	background-color: #000;
 	display: none;
 	margin: 0 auto;
 /*  pointer-events: none;*/

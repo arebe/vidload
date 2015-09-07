@@ -2,7 +2,29 @@
 //==== Preloader.js =================================//
 
 // Created by RB (@roastbeest)
-// pre-loads a list of videos asynchronously
+// pre-loads a playlist of videos asynchronously
+
+// It takes an input of a JSON obj in the format:
+// {
+//     "options": {
+//       "controlsOn": "false",
+//       "playOn": "false",
+//       "volumeOn": "false",
+//       "muteOn": "false",
+//       "durationOn": "false",
+//       "seekOn": "false",
+//       "fullscOn": "false",
+//     },
+//     "videos": [
+//     {"title": "video 1",
+//     "h264": "videos/01-16s_h264.mp4",
+//     "webm": "videos/01-16s_h264.webm",
+//     "doubleplay": "true",
+//     "waitmessage": "The video will play again in 5 seconds."
+//     },
+//     {etc.},
+//     ]
+// }
 
 //====================================================//
 //===================================================//
