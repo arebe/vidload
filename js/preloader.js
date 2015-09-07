@@ -66,13 +66,6 @@ var preLoader = function(viddata){
     e.preventDefault();
   }, false);
 
-  // update progress bar
-  function progress(percent, $element) {
-    var progressBarWidth = percent * $element.width() / 100;
-    $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
-  }
-
-
   // initialize videojs player and its UI 
   var vjsPlayer = function(w, h, i){
     // add videojs player to each video
@@ -111,12 +104,12 @@ var preLoader = function(viddata){
     var xhr = new XMLHttpRequest();
     xhr.onprogress = function(e){
       if(e.lengthComputable){
-        var perctload = (e.loaded / e.total) *100;
+        var perctload = Math.round((e.loaded / e.total) *100);
         progress(perctload, $("#progress"+i));
         
         if(perctload == 100){
           $("#vid"+i).attr("data-loaded", "true");
-          //$("#pbar"+i).hide();
+          $("#pbar"+i).hide();
         }
       }
       else {
@@ -151,5 +144,11 @@ var preLoader = function(viddata){
       }, false );
     }
     xhr.send();
+  }
+
+  // update progress bar
+  function progress(percent, $element) {
+    var progressBarWidth = percent * $element.width() / 100;
+    $element.find('div').animate({ width: progressBarWidth }, 500);
   }
 };
