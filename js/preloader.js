@@ -47,7 +47,7 @@ var preLoader = function(viddata){
     // add form elements to track play count
     $('form[name="myForm"]').append('<input type="hidden" name="'+vidList[i]+'" value="0" />');
     // add video & progress element for each video
-    $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'"><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><div id="progress'+i+'" class="progressBar"><div></div></div></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
+    $("#videos").append('<div id="vid'+i+'" data-loaded="false" data-visible="false" data-doubleplay='+allVideos.videos[i].doubleplay+' data-waitmessage="'+allVideos.videos[i].waitmessage+'" data-playcount=0><div id="pbar'+i+'"<p class="ptext">Please wait while the video loads.</p><div id="progress'+i+'" class="progressBar"><div></div></div></div><video id="video'+i+'"  > Your browser does not support the video tag. </video></div>');
     $("#vid"+i).hide();
     // style progress bar
     //$("#progress"+i).progressbar();((
@@ -106,7 +106,6 @@ var preLoader = function(viddata){
       if(e.lengthComputable){
         var perctload = Math.round((e.loaded / e.total) *100);
         progress(perctload, $("#progress"+i));
-        
         if(perctload == 100){
           $("#vid"+i).attr("data-loaded", "true");
           $("#pbar"+i).hide();
@@ -141,10 +140,40 @@ var preLoader = function(viddata){
         var width = this.videoWidth,
         height = this.videoHeight;
         vjsPlayer(width, height, i);
+        if($("#vid"+i).attr("data-visible") === "true"){
+            videojs("video"+i).play();
+        }
       }, false );
+      video.addEventListener("ended", function(e){
+        var playcount = parseInt($("#vid"+i).attr("data-playcount"));
+        if ($("#vid"+i).attr("data-doubleplay") && playcount < 1){
+          console.log($("#vid"+i).attr("data-waitmessage"));
+          $("#video"+i).hide();
+          $("#vid"+i).append('<div id="wait'+i+'"><p class="wtext">'+$("#vid"+i).attr("data-waitmessage")+'</p></div>');
+          $("#wait"+i).show();
+          var playAgain = window.setInterval(function(){
+            console.log("play again!");
+            $("#wait"+i).hide();
+            $("#video"+i).show();
+            videojs("video"+i).play();
+            $("#vid"+i).attr("data-playcount", playcount+1);
+            clearInterval(playAgain);
+          }, 5000);
+
+        }
+      })
     }
     xhr.send();
   }
+
+  // play twice, with message
+  // function doubleplay(vidElement, message){
+
+  //   videojs.(vidElement).play();
+  //   var playSecond = function(){
+
+  //   }
+  // }
 
   // update progress bar
   function progress(percent, $element) {

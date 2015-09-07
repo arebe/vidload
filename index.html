@@ -30,8 +30,8 @@
     <input type="hidden" name="userID">
   </form>
 
-  <p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(3)"></p>
-  <p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(3)"></p>
+  <p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(0)"></p>
+  <p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(0)"></p>
 
 
   <!-- run javascript after html has loaded -->
@@ -96,38 +96,40 @@
     ]
   };
 
-$(document).ready( preLoader(allVideos) );
+  $(document).ready( preLoader(allVideos) );
 
-function DisplayIt(vindex){
-  $("#video_player").show();
-  var vidElement = "video"+vindex;
-  $("#vid"+vindex).show();
-  if($("#vid"+vindex).attr("data-loaded")=="false"){
-    $("#pbar"+vindex).show(); 
+  function DisplayIt(vindex){
+    $("#video_player").show();
+    var vidElement = "video"+vindex;
+    $("#vid"+vindex).show();
+    $("#vid"+vindex).attr("data-visible", "true");
+    if($("#vid"+vindex).attr("data-loaded")=="false"){
+      $("#pbar"+vindex).show(); 
+    }
+    else{ displayVid(); }
+
+    function displayVid(){
+      var newVideo = document.getElementById(vidElement+"_html5_api");
+      newVideo.style.display="inline block";
+      var theVjs = document.getElementById(vidElement);
+      theVjs.style.display="block";
+      $("#"+vidElement).addClass("video-js vjs-default-skin");
+      videojs(vidElement).play();
+    }
   }
-  else{ displayVid(); }
 
-  function displayVid(){
-    var newVideo = document.getElementById(vidElement+"_html5_api");
-    newVideo.style.display="inline block";
-    var theVjs = document.getElementById(vidElement);
-    theVjs.style.display="block";
-    $("#"+vidElement).addClass("video-js vjs-default-skin");
-    videojs(vidElement).play();
+  function HideIt(vindex){
+    $("#video_player").hide();
+    $("#vid"+vindex).attr("data-visible", "false");
+    var vidElement = "video"+vindex;
+    $("#vid"+vindex).hide();
+    $("#pbar"+vindex).hide();
+    var oldVideo = document.getElementById(vidElement);
+    // reset to beginning 
+    videojs(vidElement).pause();
+    videojs(vidElement).currentTime(0);
+    $("#"+vidElement).removeClass("video-js vjs-default-skin");
   }
-}
-
-function HideIt(vindex){
-  $("#video_player").hide();
-  var vidElement = "video"+vindex;
-  $("#vid"+vindex).hide();
-  $("#pbar"+vindex).hide();
-  var oldVideo = document.getElementById(vidElement);
-  // reset to beginning 
-  videojs(vidElement).pause();
-  videojs(vidElement).currentTime(0);
-  $("#"+vidElement).removeClass("video-js vjs-default-skin");
-}
 
 </script>
 </body>
