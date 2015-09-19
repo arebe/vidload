@@ -25,8 +25,11 @@
     <input type="hidden" name="userID">
   </form>
 
-  <p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(0)"></p>
-  <p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(0)"></p>
+  <p align="center"><input type="button" name="VideoButton" value="Click to watch the test video" onClick="Javascript:DisplayIt(0, true)"></p>
+  <p align="center"><input type="button" name="CloseButton" value="Click to close the test video" onClick="Javascript:HideIt(0)"></p>
+
+  <p align="center"><input type="button" name="VideoButton" value="Click to watch the video" onClick="Javascript:DisplayIt(1)"></p>
+  <p align="center"><input type="button" name="CloseButton" value="Click to close the video" onClick="Javascript:HideIt(1)"></p>
 
 
   <!-- run javascript after html has loaded -->
@@ -45,87 +48,102 @@
       "fullscOn": "false",
     },
     "videos": [
-    {"title": "video 1",
-    "h264": "videos/01-16s_h264.mp4",
-    "webm": "videos/01-16s_h264.webm",
-    "doubleplay": "true",
+    {"title": "test video",
+    "h264": "videos/dog_master_3.mp4",
+    "webm": "videos/dog_master2.webm",
+    "doubleplay": "false",
     "waitmessage": "The video will play again in 5 seconds."
-    },
-    {"title": "video 2",
-    "h264": "videos/02-18s_h264.mp4",
-    "webm": "videos/02-18s_h264.webm",  
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
-    },
-    {"title": "video 3",
-    "h264": "videos/03-13s_h264.mp4",
-    "webm": "videos/03-13s_h264.webm",
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
-    },
-    {"title": "video 4",
-    "h264": "videos/04-13s_h264.mp4",
-    "webm": "videos/04-13s_h264.webm",
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
-    },
-    {"title": "video 5",
-    "h264": "videos/05-22s_h264.mp4",
-    "webm": "videos/05-22s_h264.webm",
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
-    },
-    {"title": "video 6",
-    "h264": "videos/magenta_test.mp4",
-    "webm": "videos/magenta_test.webm",
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
+  },
+  {"title": "video 1",
+  "h264": "videos/01-16s_h264.mp4",
+  "webm": "videos/01-16s_h264.webm",
+  "doubleplay": "true",
+  "waitmessage": "The video will play again in 5 seconds."
+},
+{"title": "video 2",
+"h264": "videos/02-18s_h264.mp4",
+"webm": "videos/02-18s_h264.webm",  
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+},
+{"title": "video 3",
+"h264": "videos/03-13s_h264.mp4",
+"webm": "videos/03-13s_h264.webm",
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+},
+{"title": "video 4",
+"h264": "videos/04-13s_h264.mp4",
+"webm": "videos/04-13s_h264.webm",
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+},
+{"title": "video 5",
+"h264": "videos/05-22s_h264.mp4",
+"webm": "videos/05-22s_h264.webm",
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+},
+{"title": "video 6",
+"h264": "videos/magenta_test.mp4",
+"webm": "videos/magenta_test.webm",
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
 
-    },
-    {"title": "video 7",
-    "h264": "videos/magenta_test2.mp4",
-    "webm": "videos/magenta_test2.webm",
-    "doubleplay": "true",
-    "waitmessage": "The video will play again in 5 seconds."
-    },
-    ]
-  };
+},
+{"title": "video 7",
+"h264": "videos/magenta_test2.mp4",
+"webm": "videos/magenta_test2.webm",
+"doubleplay": "true",
+"waitmessage": "The video will play again in 5 seconds."
+},
+]
+};
 
-  $(document).ready( preLoader(allVideos) );
+$(document).ready( preLoader(allVideos) );
 
-  function DisplayIt(vindex){
-    $("#video_player").show();
-    var vidElement = "video"+vindex;
-    $("#vid"+vindex).show();
-    $("#vid"+vindex).attr("data-visible", "true");
-    if($("#vid"+vindex).attr("data-loaded")=="false"){
-      $("#pbar"+vindex).show(); 
-    }
-    else{ displayVid(); }
-
-    function displayVid(){
-      var newVideo = document.getElementById(vidElement+"_html5_api");
-      newVideo.style.display="inline block";
-      var theVjs = document.getElementById(vidElement);
-      theVjs.style.display="block";
-      $("#"+vidElement).addClass("video-js vjs-default-skin");
-      videojs(vidElement).play();
-    }
+function DisplayIt(vindex, opt){
+  var test =  opt="test" ? true : false;
+  $("#video_player").show();
+  var vidElement = "video"+vindex;
+  $("#vid"+vindex).show();
+  $("#vid"+vindex).attr("data-visible", "true");
+  if($("#vid"+vindex).attr("data-loaded")=="false"){
+    $("#pbar"+vindex).show(); 
   }
+  else{ displayVid(); }
 
-  function HideIt(vindex){
-    $("#video_player").hide();
-    $("#vid"+vindex).attr("data-visible", "false");
-    var vidElement = "video"+vindex;
-    $("#vid"+vindex).hide();
-    $("#pbar"+vindex).hide();
-    var oldVideo = document.getElementById(vidElement);
+  function displayVid(){
+    var newVideo = document.getElementById(vidElement+"_html5_api");
+    newVideo.style.display="inline block";
+    var theVjs = document.getElementById(vidElement);
+    theVjs.style.display="block";
+    $("#"+vidElement).addClass("video-js vjs-default-skin");
+    if(test){
+      $(".vjs-big-play-button").hide();
+      $("#video"+vindex).css("pointer-events", "auto");
+      $("#"+vidElement).click(function(){
+        videojs(vidElement).play();
+      });
+    }
+    else{ videojs(vidElement).play(); }
+  }
+}
+
+
+function HideIt(vindex){
+  $("#video_player").hide();
+  $("#vid"+vindex).attr("data-visible", "false");
+  var vidElement = "video"+vindex;
+  $("#vid"+vindex).hide();
+  $("#pbar"+vindex).hide();
+  var oldVideo = document.getElementById(vidElement);
     // reset to beginning 
     videojs(vidElement).pause();
     videojs(vidElement).currentTime(0);
     $("#"+vidElement).removeClass("video-js vjs-default-skin");
   }
 
-</script>
+  </script>
 </body>
 </html>

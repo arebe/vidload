@@ -162,16 +162,22 @@ var preLoader = function(viddata){
         var width = this.videoWidth,
         height = this.videoHeight;
         vjsPlayer(width, height, i);
+        $("#vid"+i).attr("data-width", width);
+        $("#vid"+i).attr("data-height", height);
         if($("#vid"+i).attr("data-visible") === "true"){
             videojs("video"+i).play();
         }
       }, false );
       video.addEventListener("ended", function(e){
         var playcount = parseInt($("#vid"+i).attr("data-playcount"));
-        if ($("#vid"+i).attr("data-doubleplay") && playcount < 1){
+        if ($("#vid"+i).attr("data-doubleplay")==="true" && playcount < 1){
           console.log($("#vid"+i).attr("data-waitmessage"));
           $("#video"+i).hide();
           $("#vid"+i).append('<div id="wait'+i+'"><p class="wtext">'+$("#vid"+i).attr("data-waitmessage")+'</p></div>');
+          $("#wait"+i).css({
+            "min-width": $("#vid"+i).attr("data-width")+"px",
+            "min-height": $("#vid"+i).attr("data-height")+"px",
+          });
           $("#wait"+i).show();
           var playAgain = window.setInterval(function(){
             console.log("play again!");
@@ -187,15 +193,6 @@ var preLoader = function(viddata){
     }
     xhr.send();
   }
-
-  // play twice, with message
-  // function doubleplay(vidElement, message){
-
-  //   videojs.(vidElement).play();
-  //   var playSecond = function(){
-
-  //   }
-  // }
 
   // update progress bar
   function progress(percent, $element) {
